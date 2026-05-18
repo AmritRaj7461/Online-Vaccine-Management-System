@@ -16,6 +16,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Prevent duplicate seeding in production
+        if (User::where('email', 'admin@vaccicare.com')->exists()) {
+            return;
+        }
+
         // -----------------------------------------------
         // Mock Aadhaar Registry
         // -----------------------------------------------

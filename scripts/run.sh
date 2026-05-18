@@ -11,9 +11,12 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Run database migrations
+# Run database migrations & seeders
 echo "🗄️  Running database migrations..."
 php artisan migrate --force
+
+echo "🌱 Seeding database..."
+php artisan db:seed --force
 
 echo "✅ Boot sequence completed! Launching Supervisor process manager..."
 
