@@ -3,7 +3,6 @@
 echo "🚀 Starting VacciCare Production Boot Sequence..."
 
 # Force routing schemes to HTTPS in production to avoid SSL mixed-content blocks
-# Since Render terminates SSL, this ensures Laravel generates secure URLs.
 export FORCE_HTTPS=true
 
 # Optimize Configuration & Route caches
@@ -16,4 +15,7 @@ php artisan view:cache
 echo "🗄️  Running database migrations..."
 php artisan migrate --force
 
-echo "✅ Boot sequence completed! Launching web server..."
+echo "✅ Boot sequence completed! Launching Supervisor process manager..."
+
+# Start supervisor as PID 1
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
