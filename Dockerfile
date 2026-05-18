@@ -15,6 +15,7 @@ RUN apk add --no-cache \
     supervisor \
     bash \
     sqlite-dev \
+    postgresql-dev \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
@@ -24,7 +25,7 @@ RUN apk add --no-cache \
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_sqlite zip bcmath intl opcache mbstring
+    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql pdo_sqlite zip bcmath intl opcache mbstring
 
 # Get Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
