@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Deploy PHP Runtime with FPM & Nginx
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install system utilities & Nginx + Supervisor
 RUN apk add --no-cache \
