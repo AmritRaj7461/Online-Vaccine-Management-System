@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Mail;
 
 class AppointmentController extends Controller
 {
-    /**
-     * Display user's appointments.
-     */
     public function index()
     {
         $appointments = Auth::user()
@@ -26,9 +23,6 @@ class AppointmentController extends Controller
         return view('appointments.index', compact('appointments'));
     }
 
-    /**
-     * Show booking form.
-     */
     public function create(Request $request)
     {
         $vaccines = Vaccine::where('status', 'available')->where('stock', '>', 0)->get();
@@ -38,9 +32,6 @@ class AppointmentController extends Controller
         return view('appointments.create', compact('vaccines', 'centers', 'selectedVaccine'));
     }
 
-    /**
-     * Store a new appointment.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -61,11 +52,9 @@ class AppointmentController extends Controller
         $vaccine = Vaccine::find($validated['vaccine_id']);
         $vaccine->decrement('stock');
 
-        // Send confirmation email
         try {
             Mail::to(Auth::user()->email)->send(new BookingConfirmation($appointment->load(['vaccine', 'center', 'user'])));
         } catch (\Exception $e) {
-            // Log but don't fail
             \Log::warning('Email not sent: ' . $e->getMessage());
         }
 
@@ -73,9 +62,6 @@ class AppointmentController extends Controller
             ->with('success', 'Appointment booked successfully! A confirmation email has been sent.');
     }
 
-    /**
-     * Show appointment details.
-     */
     public function show(Appointment $appointment)
     {
         $this->authorize('view', $appointment);
@@ -83,9 +69,6 @@ class AppointmentController extends Controller
         return view('appointments.show', compact('appointment'));
     }
 
-    /**
-     * Cancel an appointment.
-     */
     public function destroy(Appointment $appointment)
     {
         if ($appointment->user_id !== Auth::id()) {
@@ -98,14 +81,12 @@ class AppointmentController extends Controller
 
         $appointment->update(['status' => 'cancelled']);
 
-        // Restore vaccine stock
         $appointment->vaccine->increment('stock');
 
         return redirect()->route('user.appointments.index')
             ->with('success', 'Appointment cancelled successfully.');
     }
 
-    // These are for admin - stub out
     public function edit(Appointment $appointment) {}
     public function update(Request $request, Appointment $appointment) {}
 }

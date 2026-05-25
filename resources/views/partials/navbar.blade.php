@@ -2,7 +2,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
 
-            {{-- Logo --}}
             <a href="{{ auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : route('user.dashboard')) : route('login') }}"
                class="flex items-center gap-2.5 group">
                 <div class="w-9 h-9 bg-gradient-to-br from-sky-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 dark:shadow-none group-hover:scale-105 transition-transform duration-300">
@@ -13,7 +12,6 @@
                 <span class="text-xl font-bold bg-gradient-to-r from-sky-600 to-blue-700 dark:from-sky-400 dark:to-blue-400 bg-clip-text text-transparent">VacciCare</span>
             </a>
 
-            {{-- Navigation Links --}}
             <div class="hidden md:flex items-center gap-1">
                 @auth
                     @if(auth()->user()->isAdmin())
@@ -54,18 +52,13 @@
                 @endauth
             </div>
 
-            {{-- User Menu / Auth Buttons --}}
             <div class="flex items-center gap-3">
-                
-                {{-- Theme Toggle --}}
                 <button onclick="toggleTheme()"
                         class="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-all active:scale-95 focus:outline-none"
                         aria-label="Toggle theme">
-                    <!-- Sun Icon (visible in dark mode) -->
                     <svg class="w-5 h-5 hidden dark:block text-amber-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m2.828 9.9a5 5 0 117.072 0l-7.072 0z"/>
                     </svg>
-                    <!-- Moon Icon (visible in light mode) -->
                     <svg class="w-5 h-5 block dark:hidden text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
                     </svg>
@@ -94,7 +87,6 @@
                                 <p class="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{{ auth()->user()->email }}</p>
                             </div>
                             
-                            {{-- Profile Link --}}
                             <a href="{{ auth()->user()->isAdmin() ? route('admin.profile') : route('user.profile') }}"
                                class="px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
