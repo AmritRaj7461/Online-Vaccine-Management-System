@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 
 class AdminAppointmentController extends Controller
 {
-    /**
-     * Display all appointments.
-     */
+    
     public function index(Request $request)
     {
         $query = Appointment::with(['user', 'vaccine', 'center']);
@@ -30,7 +28,7 @@ class AdminAppointmentController extends Controller
 
         $appointments = $query->orderByDesc('appointment_date')->paginate(15);
 
-        // Stats for dashboard header
+        
         $stats = [
             'total'     => Appointment::count(),
             'pending'   => Appointment::where('status', 'pending')->count(),
@@ -42,18 +40,14 @@ class AdminAppointmentController extends Controller
         return view('admin.appointments.index', compact('appointments', 'stats'));
     }
 
-    /**
-     * Show a single appointment.
-     */
+    
     public function show(Appointment $appointment)
     {
         $appointment->load(['user', 'vaccine', 'center']);
         return view('admin.appointments.show', compact('appointment'));
     }
 
-    /**
-     * Update appointment status.
-     */
+    
     public function update(Request $request, Appointment $appointment)
     {
         $request->validate([

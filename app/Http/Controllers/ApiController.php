@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    /**
-     * GET /api/vaccines – Return all available vaccines as JSON.
-     */
+    
     public function vaccines()
     {
         $vaccines = Vaccine::where('status', 'available')
@@ -24,9 +22,7 @@ class ApiController extends Controller
         ]);
     }
 
-    /**
-     * GET /api/appointments – Return all appointments (admin-level, demo).
-     */
+    
     public function appointments()
     {
         $appointments = Appointment::with(['user:id,name,email', 'vaccine:id,name', 'center:id,name,city'])

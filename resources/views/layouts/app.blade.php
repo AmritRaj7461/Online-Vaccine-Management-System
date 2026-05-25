@@ -80,7 +80,7 @@
     </style>
 
     <script>
-        // Auto-dismiss flash messages after 5 seconds
+        
         setTimeout(() => {
             document.getElementById('flash-success')?.remove();
             document.getElementById('flash-error')?.remove();

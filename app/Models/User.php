@@ -36,9 +36,7 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * One user has many appointments.
-     */
+    
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

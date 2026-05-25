@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IsAuthenticated
 {
-    /**
-     * Ensure the user is authenticated.
-     */
+    
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {

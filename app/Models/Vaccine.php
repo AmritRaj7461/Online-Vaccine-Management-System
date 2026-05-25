@@ -21,9 +21,7 @@ class Vaccine extends Model
         'image',
     ];
 
-    /**
-     * One vaccine has many appointments.
-     */
+    
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

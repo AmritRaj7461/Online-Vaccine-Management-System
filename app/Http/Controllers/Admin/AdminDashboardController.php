@@ -37,14 +37,12 @@ class AdminDashboardController extends Controller
         return view('admin.dashboard', compact('stats', 'recentAppointments', 'topVaccines'));
     }
 
-    /**
-     * Show the admin profile.
-     */
+    
     public function profile()
     {
         $admin = auth()->user();
         
-        // Custom admin statistics for CommandCenter dashboard view
+        
         $stats = [
             'total_users'        => \App\Models\User::where('role', 'user')->count(),
             'total_vaccines'     => \App\Models\Vaccine::count(),
@@ -55,9 +53,7 @@ class AdminDashboardController extends Controller
         return view('admin.profile', compact('admin', 'stats'));
     }
 
-    /**
-     * Update the admin profile.
-     */
+    
     public function updateProfile(Request $request)
     {
         $admin = auth()->user();

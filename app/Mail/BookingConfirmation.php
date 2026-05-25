@@ -13,17 +13,13 @@ class BookingConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
+    
     public function __construct(public Appointment $appointment)
     {
-        //
+        
     }
 
-    /**
-     * Get the message envelope.
-     */
+    
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -31,9 +27,7 @@ class BookingConfirmation extends Mailable
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
+    
     public function content(): Content
     {
         return new Content(

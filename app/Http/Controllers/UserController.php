@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    /**
-     * Show the user dashboard.
-     */
+    
     public function dashboard()
     {
         $user = Auth::user();
@@ -36,17 +34,13 @@ class UserController extends Controller
         ));
     }
 
-    /**
-     * Show the user profile.
-     */
+    
     public function profile()
     {
         return view('user.profile', ['user' => Auth::user()]);
     }
 
-    /**
-     * Update the user profile.
-     */
+    
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -65,7 +59,7 @@ class UserController extends Controller
             if (empty($newAadhar)) {
                 $validated['aadhar_verified'] = false;
             } else {
-                // Ensure session contains verification proof matching this new Aadhar
+                
                 $verifiedNumber = session('aadhar_verified_number');
                 if ($verifiedNumber !== $newAadhar) {
                     return redirect()->back()->withErrors([
@@ -74,7 +68,7 @@ class UserController extends Controller
                 }
                 // Mark as e-KYC verified
                 $validated['aadhar_verified'] = true;
-                session()->forget('aadhar_verified_number'); // Consume session proof
+                session()->forget('aadhar_verified_number'); 
             }
         }
 

@@ -21,7 +21,7 @@ class AadharVerificationController extends Controller
         $aadharNumber = $request->input('aadhar_number');
         $user = Auth::user();
 
-        // 1. Database Registry existence check
+        
         $registry = DB::table('aadhaar_registries')
             ->where('aadhar_number', $aadharNumber)
             ->first();
@@ -34,7 +34,7 @@ class AadharVerificationController extends Controller
             ]);
         }
 
-        // 2. Identity Name Matching Check (Case-insensitive, space-insensitive)
+        
         $profileName  = strtolower(trim(preg_replace('/\s+/', ' ', $user->name)));
         $registryName = strtolower(trim(preg_replace('/\s+/', ' ', $registry->registered_name)));
 
@@ -50,12 +50,12 @@ class AadharVerificationController extends Controller
         $otp = mt_rand(100000, 999999);
         $expiresAt = now()->addMinutes(5);
 
-        // Store secure context in Session
+        
         Session::put('aadhar_otp', $otp);
         Session::put('aadhar_otp_number', $aadharNumber);
         Session::put('aadhar_otp_expires_at', $expiresAt);
 
-        // Mask registered mobile number (e.g. XXXXXX1234)
+        
         $mobile = $registry->registered_mobile;
         $maskedMobile = str_repeat('X', strlen($mobile) - 4) . substr($mobile, -4);
 
@@ -106,7 +106,7 @@ class AadharVerificationController extends Controller
             ]);
         }
 
-        // Store verification proof in session for profile update matching
+        
         Session::put('aadhar_verified_number', $aadharNumber);
 
         // Clean up temporary OTP session keys

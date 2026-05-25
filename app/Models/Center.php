@@ -22,9 +22,7 @@ class Center extends Model
         'status',
     ];
 
-    /**
-     * One center has many appointments.
-     */
+    
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

@@ -298,7 +298,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                                 <style>
-                                    /* Fix custom styling color for calendar picker icon */
+                                    
                                     input[type="date"]::-webkit-calendar-picker-indicator {
                                         filter: invert(1);
                                         opacity: 0.5;
@@ -444,13 +444,13 @@
 </div>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    @import url('https:
     
     .auth-container {
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* Custom rotating and shifting blobs for high-end organic feel */
+    
     @keyframes blob {
         0%, 100% {
             transform: translate(0px, 0px) scale(1) rotate(0deg);
@@ -467,7 +467,7 @@
         animation: blob 28s infinite alternate ease-in-out;
     }
 
-    /* Floating particles */
+    
     @keyframes float {
         0%, 100% {
             transform: translateY(0px) rotate(0deg) scale(1);
@@ -483,7 +483,7 @@
         animation: float 18s infinite ease-in-out;
     }
 
-    /* custom scrolling inside the panel for small screens */
+    
     .form-scrollbar::-webkit-scrollbar {
         width: 5px;
     }

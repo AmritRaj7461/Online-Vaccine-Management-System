@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
+    
     public function run(): void
     {
         // Prevent duplicate seeding in production
@@ -21,9 +19,9 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        // -----------------------------------------------
+        
         // Mock Aadhaar Registry
-        // -----------------------------------------------
+        
         \DB::table('aadhaar_registries')->insert([
             [
                 'aadhar_number' => '123456789012',
@@ -42,9 +40,9 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        // -----------------------------------------------
-        // Users
-        // -----------------------------------------------
+        
+        
+        
         $admin = User::create([
             'name'     => 'Admin User',
             'email'    => 'admin@vaccicare.com',
@@ -76,9 +74,9 @@ class DatabaseSeeder extends Seeder
             'role'     => 'user',
         ]);
 
-        // -----------------------------------------------
-        // Vaccines
-        // -----------------------------------------------
+        
+        
+        
         $vaccines = [
             [
                 'name'               => 'Covishield',
@@ -167,9 +165,9 @@ class DatabaseSeeder extends Seeder
             $vaccineModels[] = Vaccine::create($vData);
         }
 
-        // -----------------------------------------------
-        // Centers
-        // -----------------------------------------------
+        
+        
+        
         $centers = [
             [
                 'name'         => 'AIIMS Primary Health Center',
@@ -238,9 +236,9 @@ class DatabaseSeeder extends Seeder
             $centerModels[] = Center::create($cData);
         }
 
-        // -----------------------------------------------
-        // Sample Appointments
-        // -----------------------------------------------
+        
+        
+        
         Appointment::create([
             'user_id'          => $user1->id,
             'vaccine_id'       => $vaccineModels[0]->id,

@@ -9,17 +9,13 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    /**
-     * Show the login form.
-     */
+    
     public function showLogin()
     {
         return view('auth.login', ['isRegister' => false]);
     }
 
-    /**
-     * Handle login request.
-     */
+    
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -30,7 +26,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            // Store user info in session
+            
             $request->session()->put('user_name', Auth::user()->name);
             $request->session()->put('user_role', Auth::user()->role);
 
@@ -46,20 +42,16 @@ class AuthController extends Controller
         return back()
             ->withErrors(['email' => 'These credentials do not match our records.'])
             ->withInput($request->only('email'))
-            ->with('auth_mode', 'login'); // Keep state on error
+            ->with('auth_mode', 'login'); 
     }
 
-    /**
-     * Show the registration form.
-     */
+    
     public function showRegister()
     {
         return view('auth.login', ['isRegister' => true]);
     }
 
-    /**
-     * Handle registration request.
-     */
+    
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -88,9 +80,7 @@ class AuthController extends Controller
             ->with('success', 'Account created successfully! Welcome, ' . $user->name . '!');
     }
 
-    /**
-     * Handle logout.
-     */
+    
     public function logout(Request $request)
     {
         Auth::logout();
