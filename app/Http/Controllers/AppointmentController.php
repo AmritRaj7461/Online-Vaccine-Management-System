@@ -69,7 +69,7 @@ class AppointmentController extends Controller
             \Log::warning('Email not sent: ' . $e->getMessage());
         }
 
-        return redirect()->route('appointments.index')
+        return redirect()->route('user.appointments.index')
             ->with('success', 'Appointment booked successfully! A confirmation email has been sent.');
     }
 
@@ -101,7 +101,7 @@ class AppointmentController extends Controller
         // Restore vaccine stock
         $appointment->vaccine->increment('stock');
 
-        return redirect()->route('appointments.index')
+        return redirect()->route('user.appointments.index')
             ->with('success', 'Appointment cancelled successfully.');
     }
 
