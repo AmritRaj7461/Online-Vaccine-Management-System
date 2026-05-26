@@ -27,6 +27,16 @@ class DatabaseSeeder extends Seeder
                 'registered_mobile' => '917461006461',
             ],
             [
+                'aadhar_number' => '123456789014',
+                'registered_name' => 'Muskan Kumari',
+                'registered_mobile' => '9876500004',
+            ],
+            [
+                'aadhar_number' => '123456789015',
+                'registered_name' => 'Kanak Sao',
+                'registered_mobile' => '9876500005',
+            ],
+            [
                 'aadhar_number' => '987654321098',
                 'registered_name' => 'Priya Sharma',
                 'registered_mobile' => '9876500002',
