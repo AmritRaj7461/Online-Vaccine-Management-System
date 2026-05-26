@@ -200,4 +200,17 @@ class UserFeatureController extends Controller
         $user = Auth::user();
         return view('appointments.exemption_pass', compact('user'));
     }
+
+    /**
+     * Verify/Scan the Aadhaar Exemption Pass.
+     */
+    public function verifyExemptionPass(\App\Models\User $user)
+    {
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return redirect()->route('admin.appointments.index', ['search' => $user->email])
+                ->with('success', "Scanned pass for patient: {$user->name}. Please update their Aadhaar details in the form below.");
+        }
+
+        return view('appointments.verify_pass', compact('user'));
+    }
 }

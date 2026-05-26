@@ -81,6 +81,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/verify-certificate/{appointment}', [AppointmentController::class, 'verifyCertificate'])->name('verify.certificate');
+Route::get('/verify-pass/{user}', [UserFeatureController::class, 'verifyExemptionPass'])->name('verify.exemption-pass');
 
 /*
 |--------------------------------------------------------------------------

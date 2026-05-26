@@ -80,11 +80,11 @@
             {{-- Mock Scanner QR Code --}}
             <div class="flex flex-col items-center gap-2 pt-2">
                 <div class="w-28 h-28 bg-white rounded-2xl p-2 flex items-center justify-center shadow-lg">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode(route('user.profile')) }}" 
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode(route('verify.exemption-pass', $user)) }}" 
                          alt="Exemption Pass QR Code" 
                          class="w-full h-full object-contain" />
                 </div>
-                <span class="text-[8px] font-black text-slate-500 tracking-widest uppercase">Admin Profile Registration Scan</span>
+                <span class="text-[8px] font-black text-slate-500 tracking-widest uppercase">Admin Registration Scan</span>
             </div>
         </div>
         
