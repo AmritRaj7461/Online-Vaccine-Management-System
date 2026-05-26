@@ -77,12 +77,21 @@ class AadharVerificationController extends Controller
             \Log::warning('Aadhaar OTP Email not sent: ' . $e->getMessage());
         }
 
-        return response()->json([
+        $host = $request->getHost();
+        $isLocal = in_array($host, ['localhost', '127.0.0.1', '::1']) || 
+                   preg_match('/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $host);
+
+        $responseData = [
             'success' => true,
             'mobile'  => $maskedMobile,
-            'message' => 'Aadhaar e-KYC OTP has been sent to your registered email address.',
-            'debug_otp' => $otp,
-        ]);
+            'message' => 'Aadhaar e-KYC OTP has been sent to your registered email address.'
+        ];
+
+        if (!$isLocal) {
+            $responseData['debug_otp'] = $otp;
+        }
+
+        return response()->json($responseData);
     }
 
     /**
