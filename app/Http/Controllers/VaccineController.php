@@ -10,7 +10,7 @@ class VaccineController extends Controller
     
     public function index()
     {
-        $vaccines = Vaccine::where('status', 'available')->paginate(9);
+        $vaccines = Vaccine::where('status', 'available')->get();
         return view('vaccines.index', compact('vaccines'));
     }
 

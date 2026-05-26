@@ -24,13 +24,18 @@ class UserController extends Controller
             ->orderBy('appointment_date')
             ->take(5)
             ->get();
+        $allAppointments = $user->appointments()
+            ->with(['vaccine', 'center'])
+            ->orderBy('appointment_date')
+            ->get();
 
         return view('user.dashboard', compact(
             'user',
             'totalAppointments',
             'pendingAppointments',
             'completedAppointments',
-            'upcomingAppointments'
+            'upcomingAppointments',
+            'allAppointments'
         ));
     }
 

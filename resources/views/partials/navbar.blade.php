@@ -126,5 +126,6 @@
             document.documentElement.style.colorScheme = 'dark';
             localStorage.theme = 'dark';
         }
+        window.dispatchEvent(new Event('theme-changed'));
     }
 </script>
