@@ -104,3 +104,22 @@ Route::prefix('api')->name('api.')->group(function () {
     Route::get('/vaccines', [ApiController::class, 'vaccines'])->name('vaccines');
     Route::get('/appointments', [ApiController::class, 'appointments'])->name('appointments');
 });
+
+Route::get('/test-email', function () {
+    try {
+        \Illuminate\Support\Facades\Mail::raw('This is a test email from VacciCare to verify SMTP settings.', function ($message) {
+            $message->to('amritraj7461@gmail.com')
+                ->subject('VacciCare SMTP Test Email');
+        });
+        return response()->json([
+            'success' => true,
+            'message' => 'Email sent successfully!'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to send email: ' . $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+});
