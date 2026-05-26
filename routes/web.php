@@ -9,6 +9,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VaccineController;
+use App\Http\Controllers\UserFeatureController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +64,14 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
     Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
     Route::get('/appointments/{appointment}/certificate', [AppointmentController::class, 'certificate'])->name('appointments.certificate');
+
+    // Advanced Interactive Features
+    Route::get('/notifications', [UserFeatureController::class, 'notifications'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [UserFeatureController::class, 'markNotificationRead'])->name('notifications.read');
+    Route::get('/appointments/{appointment}/pass', [UserFeatureController::class, 'walletPass'])->name('appointments.pass');
+    Route::get('/appointments/{appointment}/queue', [UserFeatureController::class, 'queueStatus'])->name('appointments.queue');
+    Route::get('/appointments/{appointment}/wellness', [UserFeatureController::class, 'wellnessLogForm'])->name('appointments.wellness');
+    Route::post('/appointments/{appointment}/wellness', [UserFeatureController::class, 'storeWellnessLog'])->name('appointments.wellness.store');
 });
 
 /*

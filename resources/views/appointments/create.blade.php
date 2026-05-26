@@ -39,7 +39,8 @@
          vaccines: {{ $vaccinesJson }},
          selectedDate: '{{ old('appointment_date', date('Y-m-d')) }}',
          dateSlots: {{ $dateSlotsJson }},
-         selectedTime: '{{ old('appointment_time') }}'
+         selectedTime: '{{ old('appointment_time') }}',
+         selectedCenterId: '{{ old('center_id') }}'
      }">
 
     {{-- Header --}}
@@ -129,19 +130,70 @@
                 <label for="center_id" class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
                     Select Vaccination Center <span class="text-rose-550">*</span>
                 </label>
-                <select name="center_id" id="center_id" required
+                <select name="center_id" id="center_id" required x-model="selectedCenterId"
                     class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border @error('center_id') border-rose-400 bg-rose-50 dark:bg-rose-950/20 @else border-slate-200 dark:border-slate-800 @enderror rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all cursor-pointer">
                     <option value="" class="dark:bg-[#0b0f19]">-- Choose a center --</option>
                     @foreach($centers as $center)
-                        <option value="{{ $center->id }}" class="dark:bg-[#0b0f19]" {{ old('center_id') == $center->id ? 'selected' : '' }}>
+                        <option value="{{ $center->id }}" class="dark:bg-[#0b0f19]">
                             {{ $center->name }} — {{ $center->city }}, {{ $center->state }}
                         </option>
                     @endforeach
                 </select>
                 @error('center_id')
-                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-450 font-semibold">{{ $message }}</p>
+                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-455 font-semibold">{{ $message }}</p>
                 @enderror
-            </div>
+
+                {{-- Interactive Map Widget --}}
+                <div class="mt-4 bg-slate-50 dark:bg-slate-900/35 p-4 border border-slate-200/60 dark:border-slate-800/40 rounded-2xl">
+                    <span class="text-[9px] uppercase font-black text-slate-400 dark:text-slate-500 tracking-wider block mb-2.5">Interactive Geographic Hub Map (Click pins to select center)</span>
+                    
+                    <div class="relative w-full aspect-[2/1] bg-slate-100 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden flex items-center justify-center shadow-inner">
+                        {{-- Background Map Silhouette --}}
+                        <svg class="absolute inset-0 w-full h-full text-slate-200 dark:text-slate-800/25 pointer-events-none" viewBox="0 0 400 200" fill="currentColor">
+                            <path d="M50,40 Q80,20 120,40 T200,60 T280,30 T350,70 L380,150 Q300,180 200,160 T80,180 Z" />
+                            <path d="M300,110 Q320,90 350,110 T380,130" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.15" />
+                        </svg>
+
+                        {{-- Dynamic map pins representing active centers --}}
+                        @php
+                            $coords = [
+                                0 => ['x' => 120, 'y' => 70],
+                                1 => ['x' => 240, 'y' => 90],
+                                2 => ['x' => 160, 'y' => 130],
+                                3 => ['x' => 290, 'y' => 70],
+                                4 => ['x' => 80, 'y' => 120],
+                            ];
+                        @endphp
+                        @foreach($centers as $index => $center)
+                            @php
+                                $coord = $coords[$index % 5];
+                            @endphp
+                            <button type="button" 
+                                    @click="selectedCenterId = '{{ $center->id }}'"
+                                    class="absolute w-8 h-8 flex items-center justify-center transition-all duration-300 focus:outline-none cursor-pointer group"
+                                    style="left: {{ $coord['x'] }}px; top: {{ $coord['y'] }}px; transform: translate(-50%, -50%);"
+                                    :class="selectedCenterId == '{{ $center->id }}' ? 'z-20 scale-110' : 'z-10 hover:scale-105'">
+                                
+                                {{-- Pulsing indicator ring --}}
+                                <span class="absolute w-6 h-6 rounded-full transition-all duration-300"
+                                      :class="selectedCenterId == '{{ $center->id }}' ? 'bg-blue-500/30 animate-ping' : 'bg-transparent'"></span>
+                                
+                                {{-- Pin Icon --}}
+                                <svg class="w-5 h-5 transition-colors duration-300" 
+                                     :class="selectedCenterId == '{{ $center->id }}' ? 'text-blue-550' : 'text-slate-400 dark:text-slate-600 hover:text-blue-400'"
+                                     fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                </svg>
+
+                                {{-- Floating Tooltip --}}
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block bg-slate-900 dark:bg-slate-950 text-white text-[9px] py-1 px-2.5 rounded-lg font-black whitespace-nowrap shadow-md z-30 opacity-95">
+                                    {{ $center->name }}
+                                </div>
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
+            </div>   </div>
 
             {{-- Date Carousel Picker --}}
             <div class="mb-5">

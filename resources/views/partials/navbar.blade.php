@@ -64,6 +64,59 @@
                     </svg>
                 </button>
 
+                {{-- Notifications Bell Icon Widget --}}
+                @auth
+                    <div class="relative" x-data="{ open: false }" style="display: inline-block;">
+                        @php
+                            $unreadNotifications = auth()->user()->notifications()->unread()->take(5)->get();
+                            $unreadCount = auth()->user()->notifications()->unread()->count();
+                        @endphp
+                        <button @click="open = !open"
+                                class="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-all active:scale-95 focus:outline-none relative cursor-pointer"
+                                aria-label="Notifications">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                            @if($unreadCount > 0)
+                                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full animate-pulse-slow"></span>
+                            @endif
+                        </button>
+
+                        {{-- Notifications Dropdown Panel --}}
+                        <div x-show="open" @click.away="open = false"
+                             x-transition:enter="transition ease-out duration-150 transform"
+                             x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                             class="absolute right-0 mt-2 w-80 bg-white dark:bg-[#151c2c] border border-slate-100 dark:border-slate-800 shadow-xl rounded-2xl py-2 z-50 overflow-hidden"
+                             style="display: none;">
+                            
+                            <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                <h4 class="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Alerts ({{ $unreadCount }})</h4>
+                                <a href="{{ route('user.notifications.index') }}" class="text-[10px] font-bold text-blue-650 dark:text-blue-400 hover:underline">Inbox →</a>
+                            </div>
+
+                            <div class="max-h-60 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-800/40">
+                                @forelse($unreadNotifications as $notif)
+                                    <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+                                        <div class="flex items-start gap-2.5">
+                                            <span class="w-2 h-2 mt-1.5 rounded-full shrink-0 {{ $notif->type === 'success' ? 'bg-emerald-500' : ($notif->type === 'warning' ? 'bg-rose-500' : 'bg-blue-500') }}"></span>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-xs font-bold text-slate-850 dark:text-white leading-tight truncate">{{ $notif->title }}</p>
+                                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-normal line-clamp-2">{{ $notif->message }}</p>
+                                                <span class="text-[9px] text-slate-450 dark:text-slate-500 mt-1 block">{{ $notif->created_at->diffForHumans() }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="p-6 text-center text-xs text-slate-400">
+                                        No unread notifications
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                @endauth
+
                 @auth
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open"

@@ -41,4 +41,9 @@ class Appointment extends Model
     {
         return $this->belongsTo(Center::class);
     }
+
+    public function wellnessLog()
+    {
+        return $this->hasOne(WellnessLog::class);
+    }
 }

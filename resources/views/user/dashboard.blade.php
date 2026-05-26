@@ -193,22 +193,38 @@
                                         Received **{{ $dose1Appt->vaccine->name }}** on {{ $dose1Appt->appointment_date->format('d M Y') }} at {{ $dose1Appt->center->name }}.
                                     </p>
                                 </div>
-                                <button type="button" 
-                                        @click="selectedCertDose = 1; selectedCertDate = '{{ $dose1Appt->appointment_date->format('d/m/Y') }}'; selectedCertName = '{{ $dose1Appt->vaccine->name }}'; selectedCertCenter = '{{ $dose1Appt->center->name }}'; selectedCertRef = '#TXN-VACC-{{ str_pad($dose1Appt->id, 6, '0', STR_PAD_LEFT) }}'; selectedCertQrUrl = '{{ $dose1Url }}'; selectedCertPrintUrl = '{{ $dose1PrintUrl }}'; certificateOpen = true"
-                                        class="sm:self-start bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 shrink-0">
-                                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                    Certificate 1
-                                </button>
+                                <div class="flex flex-wrap gap-2 sm:self-start shrink-0">
+                                    <button type="button" 
+                                            @click="selectedCertDose = 1; selectedCertDate = '{{ $dose1Appt->appointment_date->format('d/m/Y') }}'; selectedCertName = '{{ $dose1Appt->vaccine->name }}'; selectedCertCenter = '{{ $dose1Appt->center->name }}'; selectedCertRef = '#TXN-VACC-{{ str_pad($dose1Appt->id, 6, '0', STR_PAD_LEFT) }}'; selectedCertQrUrl = '{{ $dose1Url }}'; selectedCertPrintUrl = '{{ $dose1PrintUrl }}'; certificateOpen = true"
+                                            class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        Certificate
+                                    </button>
+                                    <a href="{{ route('user.appointments.pass', $dose1Appt) }}" 
+                                       class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                                        💳 Pass
+                                    </a>
+                                    <a href="{{ route('user.appointments.wellness', $dose1Appt) }}" 
+                                       class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                                        🤒 Side-Effects
+                                    </a>
+                                </div>
                             </div>
                         @elseif($dose1Status === 'scheduled')
                             <span class="absolute -left-[35px] top-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center border-4 border-white dark:border-[#151c2c] shadow-sm select-none">
                                 ●
                             </span>
-                            <div>
-                                <h3 class="text-sm font-bold text-blue-600 dark:text-blue-400">Dose 1: Scheduled</h3>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
-                                    Booked for **{{ $dose1Appt->vaccine->name }}** on {{ $dose1Appt->appointment_date->format('d M Y') }} at {{ \Carbon\Carbon::parse($dose1Appt->appointment_time)->format('h:i A') }} ({{ $dose1Appt->center->name }}).
-                                </p>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <h3 class="text-sm font-bold text-blue-600 dark:text-blue-400">Dose 1: Scheduled</h3>
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                                        Booked for **{{ $dose1Appt->vaccine->name }}** on {{ $dose1Appt->appointment_date->format('d M Y') }} at {{ \Carbon\Carbon::parse($dose1Appt->appointment_time)->format('h:i A') }} ({{ $dose1Appt->center->name }}).
+                                    </p>
+                                </div>
+                                <a href="{{ route('user.appointments.queue', $dose1Appt) }}" 
+                                   class="sm:self-start bg-blue-500 hover:bg-blue-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer text-center">
+                                    🚦 Queue Tracker
+                                </a>
                             </div>
                         @else
                             <span class="absolute -left-[35px] top-0 w-6 h-6 bg-slate-350 dark:bg-slate-700 text-white rounded-full flex items-center justify-center border-4 border-white dark:border-[#151c2c] shadow-sm select-none">
@@ -241,22 +257,38 @@
                                         Received **{{ $dose2Appt->vaccine->name }}** on {{ $dose2Appt->appointment_date->format('d M Y') }} at {{ $dose2Appt->center->name }}.
                                     </p>
                                 </div>
-                                <button type="button" 
-                                        @click="selectedCertDose = 2; selectedCertDate = '{{ $dose2Appt->appointment_date->format('d/m/Y') }}'; selectedCertName = '{{ $dose2Appt->vaccine->name }}'; selectedCertCenter = '{{ $dose2Appt->center->name }}'; selectedCertRef = '#TXN-VACC-{{ str_pad($dose2Appt->id, 6, '0', STR_PAD_LEFT) }}'; selectedCertQrUrl = '{{ $dose2Url }}'; selectedCertPrintUrl = '{{ $dose2PrintUrl }}'; certificateOpen = true"
-                                        class="sm:self-start bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 shrink-0">
-                                    <svg class="w-3.5 h-3.5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                    Final Certificate
-                                </button>
+                                <div class="flex flex-wrap gap-2 sm:self-start shrink-0">
+                                    <button type="button" 
+                                            @click="selectedCertDose = 2; selectedCertDate = '{{ $dose2Appt->appointment_date->format('d/m/Y') }}'; selectedCertName = '{{ $dose2Appt->vaccine->name }}'; selectedCertCenter = '{{ $dose2Appt->center->name }}'; selectedCertRef = '#TXN-VACC-{{ str_pad($dose2Appt->id, 6, '0', STR_PAD_LEFT) }}'; selectedCertQrUrl = '{{ $dose2Url }}'; selectedCertPrintUrl = '{{ $dose2PrintUrl }}'; certificateOpen = true"
+                                            class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <svg class="w-3.5 h-3.5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        Final Certificate
+                                    </button>
+                                    <a href="{{ route('user.appointments.pass', $dose2Appt) }}" 
+                                       class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                                        💳 Pass
+                                    </a>
+                                    <a href="{{ route('user.appointments.wellness', $dose2Appt) }}" 
+                                       class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                                        🤒 Side-Effects
+                                    </a>
+                                </div>
                             </div>
                         @elseif($dose2Status === 'scheduled')
                             <span class="absolute -left-[35px] top-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center border-4 border-white dark:border-[#151c2c] shadow-sm select-none">
                                 ●
                             </span>
-                            <div>
-                                <h3 class="text-sm font-bold text-blue-600 dark:text-blue-400">Dose 2: Scheduled</h3>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
-                                    Booked for **{{ $dose2Appt->vaccine->name }}** on {{ $dose2Appt->appointment_date->format('d M Y') }} at {{ \Carbon\Carbon::parse($dose2Appt->appointment_time)->format('h:i A') }} ({{ $dose2Appt->center->name }}).
-                                </p>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <h3 class="text-sm font-bold text-blue-600 dark:text-blue-400">Dose 2: Scheduled</h3>
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                                        Booked for **{{ $dose2Appt->vaccine->name }}** on {{ $dose2Appt->appointment_date->format('d M Y') }} at {{ \Carbon\Carbon::parse($dose2Appt->appointment_time)->format('h:i A') }} ({{ $dose2Appt->center->name }}).
+                                    </p>
+                                </div>
+                                <a href="{{ route('user.appointments.queue', $dose2Appt) }}" 
+                                   class="sm:self-start bg-blue-500 hover:bg-blue-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer text-center">
+                                    🚦 Queue Tracker
+                                </a>
                             </div>
                         @elseif($dose2Status === 'not_booked')
                             <span class="absolute -left-[35px] top-0 w-6 h-6 bg-slate-350 dark:bg-slate-700 text-white rounded-full flex items-center justify-center border-4 border-white dark:border-[#151c2c] shadow-sm select-none">

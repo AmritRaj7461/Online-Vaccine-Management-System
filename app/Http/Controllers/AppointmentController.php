@@ -59,6 +59,14 @@ class AppointmentController extends Controller
             \Log::warning('Email not sent: ' . $e->getMessage());
         }
 
+        // Trigger Notification
+        \App\Models\Notification::create([
+            'user_id' => Auth::id(),
+            'title'   => 'Appointment Booked',
+            'message' => "Your appointment for {$vaccine->name} at {$appointment->center->name} has been booked successfully for {$appointment->appointment_date->format('d M Y')} at " . \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') . ". It is currently pending center approval.",
+            'type'    => 'info',
+        ]);
+
         return redirect()->route('user.appointments.index')
             ->with('success', 'Appointment booked successfully! A confirmation email has been sent.');
     }
