@@ -1,35 +1,35 @@
 @extends('layouts.app')
 
-@section('title', 'Vaccine Wallet Pass')
+@section('title', 'Digital Immunization Pass')
 
 @section('content')
-<div class="max-w-md mx-auto px-4 py-12 transition-colors duration-200 no-print">
+<div class="max-w-md mx-auto px-4 py-12 transition-colors duration-200">
     {{-- Go Back Action --}}
-    <div class="mb-6 flex justify-between items-center">
-        <a href="{{ route('user.dashboard') }}" class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-semibold cursor-pointer">
+    <div class="mb-6 flex justify-between items-center no-print">
+        <a href="{{ route('user.dashboard') }}" class="inline-flex items-center gap-1 text-sm text-slate-505 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-semibold cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             Back
         </a>
-        <button onclick="window.print()" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">Print Pass</button>
+        <button onclick="window.print()" class="text-xs font-bold text-emerald-600 dark:text-emerald-450 hover:underline cursor-pointer">Print Pass</button>
     </div>
 
-    {{-- Glassmorphism Mobile Card Pass --}}
-    <div class="relative bg-gradient-to-br from-slate-900 to-[#0e1628] dark:from-[#111827] dark:to-[#030712] text-white rounded-[32px] p-6 shadow-2xl overflow-hidden border border-white/10 select-none hover-shimmer transform transition-transform hover:scale-[1.01]">
+    {{-- Glassmorphism Mobile Card Pass (Emerald verified theme) --}}
+    <div class="relative bg-gradient-to-br from-emerald-900 to-[#061e16] dark:from-[#052216] dark:to-[#020c08] text-white rounded-[32px] p-6 shadow-2xl overflow-hidden border border-white/10 select-none hover-shimmer transform transition-transform hover:scale-[1.01]">
         
         {{-- Card Header --}}
         <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-blue-500/20 border border-blue-500/30 rounded-xl flex items-center justify-center">
-                    <span class="text-blue-400 font-black text-sm">印</span>
+                <div class="w-8 h-8 bg-emerald-500/20 border border-emerald-500/30 rounded-xl flex items-center justify-center">
+                    <span class="text-emerald-405 font-black text-sm">印</span>
                 </div>
                 <div>
-                    <h1 class="text-xs font-black tracking-wider uppercase leading-none text-white/90">VacciCare</h1>
+                    <h1 class="text-xs font-black tracking-wider uppercase leading-none text-white/90">Digital Immunization Pass</h1>
                     <span class="text-[8px] font-bold text-slate-400 leading-none">Government of India</span>
                 </div>
             </div>
             <span class="px-2.5 py-0.5 text-[9px] font-black bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center gap-1 uppercase tracking-wider">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-450 animate-pulse"></span>
-                Verified
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Immunized
             </span>
         </div>
 

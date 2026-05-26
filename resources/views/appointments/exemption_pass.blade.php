@@ -3,9 +3,9 @@
 @section('title', 'Aadhaar Exemption & Vaccine Entry Pass')
 
 @section('content')
-<div class="max-w-md mx-auto px-4 py-12 transition-colors duration-200 no-print">
+<div class="max-w-md mx-auto px-4 py-12 transition-colors duration-200">
     {{-- Go Back Action --}}
-    <div class="mb-6 flex justify-between items-center">
+    <div class="mb-6 flex justify-between items-center no-print">
         <a href="{{ route('user.dashboard') }}" class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-semibold cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             Back to Dashboard

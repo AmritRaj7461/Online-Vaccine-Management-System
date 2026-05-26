@@ -150,38 +150,20 @@ textarea::placeholder {
     opacity: 1;
 }
 
-/* ============================================
-   PRINT STYLES
-   ============================================ */
-/* Print styles for digital certificate */
+/* Print styles for digital certificate and passes */
 @media print {
     body {
         background-color: white !important;
-        color: black !important;
+        color: #000000 !important;
     }
-    body * {
-        visibility: hidden !important;
-    }
-    #print-certificate, #print-certificate * {
-        visibility: visible !important;
-    }
-    #print-certificate {
-        position: fixed !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        border: none !important;
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 2cm !important;
-        background: white !important;
-        z-index: 9999999 !important;
-    }
-    .no-print {
+    /* Hide layout headers, footers, support drawer, and general action buttons */
+    nav, footer, .no-print, .fixed, button, [role="button"], [class*="fixed"], [id*="faq-widget"], .toast-container {
         display: none !important;
         visibility: hidden !important;
+    }
+    main {
+        padding-top: 0 !important;
+        margin: 0 !important;
     }
 }
 
