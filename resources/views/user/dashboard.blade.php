@@ -207,7 +207,7 @@
                                     </button>
                                     <a href="{{ route('user.appointments.pass', $dose1Appt) }}" 
                                        class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
-                                        💳 Pass
+                                        💳 Wallet Pass
                                     </a>
                                     <a href="{{ route('user.appointments.wellness', $dose1Appt) }}" 
                                        class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
@@ -275,7 +275,7 @@
                                     </button>
                                     <a href="{{ route('user.appointments.pass', $dose2Appt) }}" 
                                        class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
-                                        💳 Pass
+                                        💳 Wallet Pass
                                     </a>
                                     <a href="{{ route('user.appointments.wellness', $dose2Appt) }}" 
                                        class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">

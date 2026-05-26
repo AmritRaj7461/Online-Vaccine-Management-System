@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Digital Immunization Pass')
+@section('title', 'Wallet Pass')
 
 @section('content')
 <div class="max-w-md mx-auto px-4 py-12 transition-colors duration-200">
@@ -10,11 +10,11 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             Back
         </a>
-        <button onclick="window.print()" class="text-xs font-bold text-emerald-600 dark:text-emerald-450 hover:underline cursor-pointer">Print Pass</button>
+        <button onclick="downloadPass()" class="text-xs font-bold text-emerald-650 dark:text-emerald-450 hover:underline cursor-pointer">Download Pass</button>
     </div>
 
     {{-- Glassmorphism Mobile Card Pass (Emerald verified theme) --}}
-    <div class="relative bg-gradient-to-br from-emerald-900 to-[#061e16] dark:from-[#052216] dark:to-[#020c08] text-white rounded-[32px] p-6 shadow-2xl overflow-hidden border border-white/10 select-none hover-shimmer transform transition-transform hover:scale-[1.01]">
+    <div id="wallet-card" class="relative bg-gradient-to-br from-emerald-900 to-[#061e16] dark:from-[#052216] dark:to-[#020c08] text-white rounded-[32px] p-6 shadow-2xl overflow-hidden border border-white/10 select-none hover-shimmer transform transition-transform hover:scale-[1.01]">
         
         {{-- Card Header --}}
         <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
@@ -23,7 +23,7 @@
                     <span class="text-emerald-405 font-black text-sm">印</span>
                 </div>
                 <div>
-                    <h1 class="text-xs font-black tracking-wider uppercase leading-none text-white/90">Digital Immunization Pass</h1>
+                    <h1 class="text-xs font-black tracking-wider uppercase leading-none text-white/90">Wallet Pass</h1>
                     <span class="text-[8px] font-bold text-slate-400 leading-none">Government of India</span>
                 </div>
             </div>
@@ -93,34 +93,47 @@
     </div>
 </div>
 
-<style>
-    /* Styling rules for printing mobile card */
-    @media print {
-        body {
-            background: white !important;
-            color: black !important;
-        }
-        .no-print, header, footer, nav, .fixed {
-            display: none !important;
-        }
-        main {
-            padding-top: 0 !important;
-            margin: 0 !important;
-        }
-        .max-w-md {
-            max-w: 100% !important;
-            width: 100% !important;
-            padding: 0 !important;
-        }
-        .rounded-\[32px\] {
-            border-radius: 16px !important;
-        }
-        .bg-gradient-to-br {
-            background: #111827 !important;
-            color: white !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    function downloadPass() {
+        const card = document.getElementById('wallet-card');
+        
+        // Temporarily clear styling modifications for accurate capture
+        const prevTransform = card.style.transform;
+        card.style.transform = 'none';
+
+        // Play subtle sound feedback
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+            osc.stop(audioCtx.currentTime + 0.12);
+        } catch (e) {}
+
+        html2canvas(card, {
+            backgroundColor: null, // transparent background for nice rounded corners
+            scale: 3, // high resolution
+            logging: false,
+            useCORS: true
+        }).then(canvas => {
+            card.style.transform = prevTransform;
+            
+            const link = document.createElement('a');
+            link.download = 'VacciCare_Wallet_Pass.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            card.style.transform = prevTransform;
+            console.error("Error generating pass:", err);
+            alert("Could not capture pass. Please try again.");
+        });
     }
-</style>
+</script>
 @endsection
