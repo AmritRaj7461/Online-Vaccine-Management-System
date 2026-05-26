@@ -97,6 +97,11 @@ Route::middleware(['auth', \App\Http\Middleware\IsAdmin::class])
         // Admin Dashboard
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+        // Admin QR Scanner Portal
+        Route::get('/scanner', [AdminDashboardController::class, 'showScanner'])->name('scanner');
+        Route::get('/patient-info/{user}', [AdminDashboardController::class, 'getPatientInfo'])->name('patient-info');
+        Route::post('/verify-patient/{user}', [AdminDashboardController::class, 'verifyPatientAadhar'])->name('verify-patient');
+
         // Profile
         Route::get('/profile', [AdminDashboardController::class, 'profile'])->name('profile');
         Route::post('/profile', [AdminDashboardController::class, 'updateProfile'])->name('profile.update');

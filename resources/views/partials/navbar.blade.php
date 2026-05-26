@@ -31,6 +31,10 @@
                            class="px-4 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.appointments.*') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800' }}">
                             Appointments
                         </a>
+                        <a href="{{ route('admin.scanner') }}"
+                           class="px-4 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.scanner') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                            QR Scanner 📷
+                        </a>
                     @else
                         <a href="{{ route('user.dashboard') }}"
                            class="px-4 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('user.dashboard') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800' }}">

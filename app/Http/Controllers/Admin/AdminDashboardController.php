@@ -68,4 +68,58 @@ class AdminDashboardController extends Controller
 
         return redirect()->back()->with('success', 'Admin profile updated successfully!');
     }
+
+    /**
+     * Show the admin scanner portal view.
+     */
+    public function showScanner()
+    {
+        return view('admin.scanner');
+    }
+
+    /**
+     * Get patient info for the scanner via AJAX.
+     */
+    public function getPatientInfo(User $user)
+    {
+        return response()->json([
+            'success' => true,
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'dob' => $user->dob ? $user->dob->format('d M Y') : 'Not set',
+            'aadhar_verified' => $user->aadhar_verified,
+            'aadhar_number' => $user->aadhar_number,
+            'reference_id' => '#PAT-' . str_pad($user->id, 5, '0', STR_PAD_LEFT)
+        ]);
+    }
+
+    /**
+     * Verify a patient's Aadhaar from the scanner submission via AJAX.
+     */
+    public function verifyPatientAadhar(Request $request, User $user)
+    {
+        $request->validate([
+            'aadhar_number' => ['required', 'numeric', 'digits:12'],
+        ]);
+
+        $user->update([
+            'aadhar_number' => $request->aadhar_number,
+            'aadhar_verified' => true,
+        ]);
+
+        // Trigger notification to patient
+        \App\Models\Notification::create([
+            'user_id' => $user->id,
+            'title'   => 'Aadhaar Verified Offline',
+            'message' => 'Your Aadhaar card has been verified offline by the healthcare staff at the center. Online appointment bookings are now unlocked.',
+            'type'    => 'success',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Aadhaar verified successfully for {$user->name}!",
+            'user' => $user
+        ]);
+    }
 }
