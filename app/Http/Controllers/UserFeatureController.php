@@ -80,22 +80,53 @@ class UserFeatureController extends Controller
 
         $appointment->load(['vaccine', 'center']);
 
-        // Queue Simulation math
-        $userToken = ($appointment->id % 40) + 12; // Dynamic but deterministic token
-        
-        // Simulating serving token: slightly behind user token
-        $servingToken = $userToken - 4;
-        if ($servingToken < 1) {
-            $servingToken = 1;
+        // 1. Get all active appointments at the same center on the same date, ordered by time and creation
+        $allAppointments = Appointment::where('center_id', $appointment->center_id)
+            ->where('appointment_date', $appointment->appointment_date)
+            ->whereIn('status', ['pending', 'confirmed', 'completed'])
+            ->orderBy('appointment_time')
+            ->orderBy('id')
+            ->get();
+
+        // 2. Find the index/position of the current appointment (User's Token)
+        $userToken = 1;
+        $userIndex = 0;
+        foreach ($allAppointments as $index => $appt) {
+            if ($appt->id === $appointment->id) {
+                $userToken = $index + 1;
+                $userIndex = $index;
+                break;
+            }
         }
 
-        $peopleAhead = $userToken - $servingToken;
-        $waitTimeMinutes = $peopleAhead * 5; // 5 mins per person
+        // 3. Find the currently serving token (the first appointment that is not yet completed)
+        $servingTokenIndex = null;
+        foreach ($allAppointments as $index => $appt) {
+            if (in_array($appt->status, ['pending', 'confirmed'])) {
+                $servingTokenIndex = $index;
+                break;
+            }
+        }
+
+        // If all appointments are completed, the queue is finished (serving last index)
+        if ($servingTokenIndex === null) {
+            $servingToken = $allAppointments->count();
+        } else {
+            $servingToken = $servingTokenIndex + 1;
+        }
+
+        // Calculate people ahead in the queue line
+        $peopleAhead = 0;
+        if ($servingTokenIndex !== null && $userIndex > $servingTokenIndex) {
+            $peopleAhead = $userIndex - $servingTokenIndex;
+        }
+
+        $waitTimeMinutes = $peopleAhead * 10; // Average of 10 minutes wait per person
 
         $density = 'Low';
-        if ($waitTimeMinutes > 25) {
+        if ($waitTimeMinutes > 30) {
             $density = 'High';
-        } elseif ($waitTimeMinutes > 12) {
+        } elseif ($waitTimeMinutes > 10) {
             $density = 'Medium';
         }
 
