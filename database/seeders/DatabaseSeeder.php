@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         \DB::table('aadhaar_registries')->insert([
             [
                 'aadhar_number' => '123456789012',
-                'registered_name' => 'Amrit Mishra',
+                'registered_name' => 'Amrit Raj',
                 'registered_mobile' => '9876500001',
             ],
             [
