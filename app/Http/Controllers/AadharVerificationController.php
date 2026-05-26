@@ -24,9 +24,19 @@ class AadharVerificationController extends Controller
         $user = Auth::user();
 
         
+        \Log::info('Aadhaar verification request received', [
+            'input' => $aadharNumber,
+            'input_len' => strlen($aadharNumber),
+        ]);
+
         $registry = DB::table('aadhaar_registries')
             ->where('aadhar_number', $aadharNumber)
             ->first();
+
+        \Log::info('Aadhaar registry query result', [
+            'found' => !empty($registry),
+            'registry' => $registry,
+        ]);
 
         if (!$registry) {
             return response()->json([
