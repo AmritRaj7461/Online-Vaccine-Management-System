@@ -80,7 +80,8 @@ class AadharVerificationController extends Controller
         return response()->json([
             'success' => true,
             'mobile'  => $maskedMobile,
-            'message' => 'Aadhaar e-KYC OTP has been sent to your registered email address.'
+            'message' => 'Aadhaar e-KYC OTP has been sent to your registered email address.',
+            'debug_otp' => $otp,
         ]);
     }
 

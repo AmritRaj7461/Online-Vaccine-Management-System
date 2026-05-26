@@ -84,6 +84,7 @@
                 }
                 // OTP triggered successfully
                 this.maskedMobile = data.mobile;
+                this.simulatedOtp = data.debug_otp || '';
                 this.otpSent = true;
                 this.otpValues = ['', '', '', '', '', ''];
                 this.modalOpen = true;
@@ -466,6 +467,16 @@
                 <div class="text-center">
                     <p class="text-sm font-semibold text-slate-600 dark:text-slate-350">Enter 6-Digit OTP</p>
                     <p class="text-xs text-slate-450 dark:text-slate-400 mt-1.5 leading-relaxed">A secure e-KYC verification code has been sent to your **registered email address**. Please check your inbox to retrieve the code.</p>
+                    
+                    {{-- Demo Mode helper when SMTP is blocked (e.g. Render Free Tier) --}}
+                    <template x-if="simulatedOtp">
+                        <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center">
+                            <p class="text-xs text-amber-600 dark:text-amber-400 font-semibold leading-relaxed">
+                                ⚠️ <strong>Demo Mode:</strong> Outbound SMTP is restricted on Render's free tier. Use this code to verify: 
+                                <span class="font-mono text-sm font-bold bg-amber-500/20 px-2 py-0.5 rounded select-all" x-text="simulatedOtp"></span>
+                            </p>
+                        </div>
+                    </template>
                 </div>
 
                 {{-- Segmented OTP Inputs --}}
