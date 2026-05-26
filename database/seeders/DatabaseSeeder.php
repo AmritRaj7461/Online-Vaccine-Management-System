@@ -14,15 +14,8 @@ class DatabaseSeeder extends Seeder
     
     public function run(): void
     {
-        // Prevent duplicate seeding in production
-        if (User::where('email', 'admin@vaccicare.com')->exists()) {
-            return;
-        }
-
-        
-        // Mock Aadhaar Registry
-        
-        \DB::table('aadhaar_registries')->insert([
+        // Mock Aadhaar Registry (Always seed/update to ensure new test users are available)
+        $aadhaarRecords = [
             [
                 'aadhar_number' => '123456789012',
                 'registered_name' => 'Amrit Mishra',
@@ -43,7 +36,22 @@ class DatabaseSeeder extends Seeder
                 'registered_name' => 'Raj Malhotra',
                 'registered_mobile' => '9876500003',
             ],
-        ]);
+        ];
+
+        foreach ($aadhaarRecords as $record) {
+            \DB::table('aadhaar_registries')->updateOrInsert(
+                ['aadhar_number' => $record['aadhar_number']],
+                [
+                    'registered_name' => $record['registered_name'],
+                    'registered_mobile' => $record['registered_mobile']
+                ]
+            );
+        }
+
+        // Prevent duplicate seeding in production for Users, Vaccines, Centers, and Appointments
+        if (User::where('email', 'admin@vaccicare.com')->exists()) {
+            return;
+        }
 
         
         
