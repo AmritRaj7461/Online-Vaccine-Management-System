@@ -41,7 +41,7 @@
             </div>
 
             {{-- Viewfinder Container --}}
-            <div class="relative w-full aspect-square bg-[#0b0f19] rounded-2xl overflow-hidden flex flex-col items-center justify-center border border-slate-150 dark:border-slate-800">
+            <div class="relative w-full h-64 sm:h-80 md:h-auto md:aspect-square bg-[#0b0f19] rounded-2xl overflow-hidden flex flex-col items-center justify-center border border-slate-150 dark:border-slate-800">
                 
                 {{-- Laser line animation --}}
                 <div class="absolute inset-x-0 h-0.5 bg-emerald-450 opacity-70 shadow-[0_0_8px_#34d399] z-20 pointer-events-none"
@@ -187,7 +187,12 @@
                 Html5Qrcode.getCameras().then(devices => {
                     if (devices && devices.length > 0) {
                         this.cameras = devices;
-                        this.selectedCameraId = devices[0].id;
+                        // Find a camera with 'back' or 'rear' or 'environment' in its label
+                        let backCam = devices.find(device => {
+                            const label = device.label.toLowerCase();
+                            return label.includes('back') || label.includes('rear') || label.includes('environment');
+                        });
+                        this.selectedCameraId = backCam ? backCam.id : devices[0].id;
                         this.startScanner();
                     } else {
                         console.warn("No cameras found.");

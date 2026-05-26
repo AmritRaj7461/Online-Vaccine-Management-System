@@ -11,6 +11,7 @@
         showPassReg: false,
         showPassRegConf: false,
         highlightFill: false,
+        isMobile: window.innerWidth < 768,
         toggle() {
             this.mode = this.mode === 'login' ? 'register' : 'login';
         },
@@ -29,7 +30,8 @@
                 setTimeout(() => { this.highlightFill = false; }, 1200);
             }
         }
-     }">
+     }"
+     x-init="window.addEventListener('resize', () => { isMobile = window.innerWidth < 768 })">
 
     {{-- Glowing animated fluid blobs in the background --}}
     <div class="absolute -top-32 -left-32 w-[600px] h-[600px] bg-gradient-to-tr from-indigo-500/20 to-purple-600/5 rounded-full blur-[130px] animate-blob pointer-events-none"></div>
@@ -57,7 +59,7 @@
     <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none"></div>
 
     {{-- Main Glass Card Container --}}
-    <div class="relative w-full max-w-4xl h-[640px] backdrop-blur-2xl rounded-3xl border border-white/10 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col md:flex-row"
+    <div class="relative w-full max-w-4xl min-h-[640px] md:h-[640px] md:min-h-0 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col md:flex-row"
          style="background-color: rgba(9, 13, 26, 0.75);">
 
         {{-- Mobile Responsive Toggle Header --}}
@@ -79,10 +81,11 @@
         {{-- LEFT SIDE FORM PANEL (Sign In)                                --}}
         {{-- ------------------------------------------------------------- --}}
         <div class="flex-1 h-full relative p-8 sm:p-12 transition-all duration-700 ease-in-out md:block overflow-y-auto form-scrollbar"
+             x-show="mode === 'login' || !isMobile"
              :class="mode === 'login' ? 'md:translate-x-0 md:opacity-100 md:pointer-events-auto' : 'md:translate-x-[40px] md:opacity-0 md:pointer-events-none'">
 
             <div class="h-full flex flex-col justify-center"
-                 x-show="mode === 'login' || window.innerWidth < 768"
+                 x-show="mode === 'login'"
                  x-transition:enter="transition ease-out duration-500"
                  x-transition:enter-start="opacity-0 transform -translate-x-6"
                  x-transition:enter-end="opacity-100 transform translate-x-0">
@@ -211,10 +214,11 @@
         {{-- RIGHT SIDE FORM PANEL (Create Account)                        --}}
         {{-- ------------------------------------------------------------- --}}
         <div class="flex-1 h-full relative p-8 sm:p-12 transition-all duration-700 ease-in-out md:block overflow-y-auto form-scrollbar"
+             x-show="mode === 'register' || !isMobile"
              :class="mode === 'register' ? 'md:translate-x-0 md:opacity-100 md:pointer-events-auto' : 'md:-translate-x-[40px] md:opacity-0 md:pointer-events-none'">
 
             <div class="h-full flex flex-col justify-center animate-fade-in"
-                 x-show="mode === 'register' || window.innerWidth < 768"
+                 x-show="mode === 'register'"
                  x-transition:enter="transition ease-out duration-500"
                  x-transition:enter-start="opacity-0 transform translate-x-6"
                  x-transition:enter-end="opacity-100 transform translate-x-0">

@@ -1,4 +1,4 @@
-<nav class="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-200">
+<nav x-data="{ mobileMenuOpen: false }" class="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
 
@@ -66,6 +66,14 @@
                     <svg class="w-5 h-5 block dark:hidden text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
                     </svg>
+                </button>
+
+                {{-- Hamburger menu button for mobile --}}
+                <button @click="mobileMenuOpen = !mobileMenuOpen"
+                        class="p-2 md:hidden bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-all active:scale-95 focus:outline-none cursor-pointer"
+                        aria-label="Toggle menu">
+                    <svg x-show="!mobileMenuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg x-show="mobileMenuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
 
                 {{-- Notifications Bell Icon Widget --}}
@@ -169,6 +177,56 @@
                 @endauth
             </div>
         </div>
+    </div>
+
+    {{-- Mobile Navigation Menu (Drawer style) --}}
+    <div x-show="mobileMenuOpen" 
+         x-transition:enter="transition ease-out duration-150 transform"
+         x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         class="md:hidden border-t border-slate-150 dark:border-slate-800/80 bg-white dark:bg-[#0b0f19] px-4 py-3 space-y-1.5 shadow-lg relative z-50"
+         style="display: none;">
+        @auth
+            @if(auth()->user()->isAdmin())
+                <a href="{{ route('admin.dashboard') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    Dashboard
+                </a>
+                <a href="{{ route('admin.vaccines.index') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.vaccines.*') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    Vaccines
+                </a>
+                <a href="{{ route('admin.centers.index') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.centers.*') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    Centers
+                </a>
+                <a href="{{ route('admin.appointments.index') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.appointments.*') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    Appointments
+                </a>
+                <a href="{{ route('admin.scanner') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.scanner') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    QR Scanner 📷
+                </a>
+            @else
+                <a href="{{ route('user.dashboard') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('user.dashboard') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    Dashboard
+                </a>
+                <a href="{{ route('user.vaccines.index') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('user.vaccines.*') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    Vaccines
+                </a>
+                <a href="{{ route('user.appointments.index') }}"
+                   class="block px-3 py-2 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('user.appointments.*') ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'text-slate-755 dark:text-slate-200 hover:bg-slate-55 dark:hover:bg-slate-800' }}">
+                    My Appointments
+                </a>
+                <a href="{{ route('user.appointments.create') }}"
+                   class="block px-3 py-2 text-center text-sm font-semibold bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-xl shadow-sm active:scale-98">
+                    + Book Appointment
+                </a>
+            @endif
+        @endauth
     </div>
 </nav>
 
