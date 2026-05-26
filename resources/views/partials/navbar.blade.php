@@ -117,6 +117,8 @@
 
 <script>
     function toggleTheme() {
+        document.documentElement.classList.add('no-transitions');
+        
         if (document.documentElement.classList.contains('dark')) {
             document.documentElement.classList.remove('dark');
             document.documentElement.style.colorScheme = 'light';
@@ -126,6 +128,14 @@
             document.documentElement.style.colorScheme = 'dark';
             localStorage.theme = 'dark';
         }
+        
+        // Force a reflow to ensure the class is active
+        window.getComputedStyle(document.documentElement).opacity;
+        
+        setTimeout(() => {
+            document.documentElement.classList.remove('no-transitions');
+        }, 50);
+
         window.dispatchEvent(new Event('theme-changed'));
     }
 </script>

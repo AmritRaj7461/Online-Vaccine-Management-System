@@ -465,8 +465,8 @@
             {{-- Body contents --}}
             <div class="space-y-6">
                 <div class="text-center">
-                    <p class="text-sm font-semibold text-slate-600 dark:text-slate-350">Enter 6-Digit OTP</p>
-                    <p class="text-xs text-slate-450 dark:text-slate-400 mt-1.5 leading-relaxed">A secure e-KYC verification code has been sent to your **registered email address**. Please check your inbox to retrieve the code.</p>
+                    <p class="text-sm font-semibold text-slate-750 dark:text-slate-300">Enter 6-Digit OTP</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed">A secure e-KYC verification code has been sent to your **registered email address**. Please check your inbox to retrieve the code.</p>
                     
                     {{-- Demo Mode helper when SMTP is blocked (e.g. Render Free Tier) --}}
                     <template x-if="simulatedOtp">

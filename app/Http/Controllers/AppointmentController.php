@@ -9,6 +9,7 @@ use App\Models\Vaccine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 
 class AppointmentController extends Controller
 {
@@ -89,4 +90,47 @@ class AppointmentController extends Controller
 
     public function edit(Appointment $appointment) {}
     public function update(Request $request, Appointment $appointment) {}
+
+    public function certificate(Appointment $appointment)
+    {
+        if (Auth::id() !== $appointment->user_id && !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($appointment->status !== 'completed') {
+            return redirect()->route('user.appointments.index')
+                ->with('error', 'Certificate is only available for completed vaccinations.');
+        }
+
+        $appointment->load(['vaccine', 'center', 'user']);
+
+        // Generate cryptographically signed public verification URL
+        $verificationUrl = URL::signedRoute('verify.certificate', ['appointment' => $appointment->id]);
+
+        return view('appointments.certificate', compact('appointment', 'verificationUrl'));
+    }
+
+    public function verifyCertificate(Request $request, Appointment $appointment)
+    {
+        if (!$request->hasValidSignature()) {
+            return response()->view('appointments.verify', [
+                'success' => false,
+                'message' => 'Invalid or Tampered Certificate Signature! The record authenticity could not be verified.'
+            ], 403);
+        }
+
+        if ($appointment->status !== 'completed') {
+            return response()->view('appointments.verify', [
+                'success' => false,
+                'message' => 'This vaccination appointment is not completed yet.'
+            ], 400);
+        }
+
+        $appointment->load(['vaccine', 'center', 'user']);
+
+        return view('appointments.verify', [
+            'success' => true,
+            'appointment' => $appointment
+        ]);
+    }
 }

@@ -26,7 +26,7 @@
         @endphp
 
         @foreach($statCards as $card)
-            <div class="bg-white dark:bg-[#151c2c] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-5 transition-all duration-300 hover:shadow-md animate-fade-in-up {{ $card['delay'] }}">
+            <div class="bg-white dark:bg-[#151c2c] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-5 transition-all duration-300 hover:shadow-md animate-fade-in-up hover-shimmer {{ $card['delay'] }}">
                 <div class="flex items-center justify-between mb-3">
                     <div class="w-10 h-10 bg-{{ $card['color'] }}-100 {{ $card['accent'] }} rounded-xl flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5 text-{{ $card['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +34,12 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-3xl font-extrabold text-slate-800 dark:text-white leading-none">{{ $card['value'] }}</p>
+                <p class="text-3xl font-extrabold text-slate-800 dark:text-white leading-none"
+                   x-data="{ current: 0, target: {{ $card['value'] }} }"
+                   x-init="let end = target; if (end > 0) { let duration = 800; let step = Math.ceil(end / (duration / 16)); let timer = setInterval(() => { current += step; if (current >= end) { current = end; clearInterval(timer); } }, 16); } else { current = 0; }"
+                   x-text="current">
+                    {{ $card['value'] }}
+                </p>
                 <p class="text-xs font-semibold text-slate-400 dark:text-slate-400 mt-2 tracking-wide uppercase">{{ $card['label'] }}</p>
             </div>
         @endforeach
@@ -49,7 +54,12 @@
             ['label' => 'Cancelled', 'key' => 'cancelled', 'class' => 'rose', 'lightBg' => 'bg-rose-50 dark:bg-rose-950/15', 'lightBorder' => 'border-rose-100 dark:border-rose-900/20', 'textColor' => 'text-rose-700 dark:text-rose-400', 'subText' => 'text-rose-600 dark:text-rose-500'],
         ] as $item)
             <div class="{{ $item['lightBg'] }} border {{ $item['lightBorder'] }} rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow">
-                <p class="text-2xl font-extrabold {{ $item['textColor'] }} leading-none">{{ $stats[$item['key']] }}</p>
+                <p class="text-2xl font-extrabold {{ $item['textColor'] }} leading-none"
+                   x-data="{ current: 0, target: {{ $stats[$item['key']] }} }"
+                   x-init="let end = target; if (end > 0) { let duration = 800; let step = Math.ceil(end / (duration / 16)); let timer = setInterval(() => { current += step; if (current >= end) { current = end; clearInterval(timer); } }, 16); } else { current = 0; }"
+                   x-text="current">
+                    {{ $stats[$item['key']] }}
+                </p>
                 <p class="text-xs font-semibold {{ $item['subText'] }} mt-2 tracking-wide uppercase">{{ $item['label'] }}</p>
             </div>
         @endforeach
@@ -83,10 +93,10 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-800 transition-colors duration-200">
-                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-400 dark:text-slate-405 uppercase tracking-wider">Patient</th>
-                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-400 dark:text-slate-405 uppercase tracking-wider">Vaccine</th>
-                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-400 dark:text-slate-405 uppercase tracking-wider">Date</th>
-                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-400 dark:text-slate-405 uppercase tracking-wider">Status</th>
+                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Patient</th>
+                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Vaccine</th>
+                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</th>
+                            <th class="text-left px-5 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800/40">
@@ -95,7 +105,7 @@
                                 $colors = ['pending'=>'amber','confirmed'=>'blue','completed'=>'emerald','cancelled'=>'rose'];
                                 $c = $colors[$appt->status] ?? 'slate';
                             @endphp
-                            <tr class="hover:bg-slate-55 dark:hover:bg-slate-800/20 transition-colors">
+                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
                                 <td class="px-5 py-3.5">
                                     <p class="font-semibold text-slate-800 dark:text-white">{{ $appt->user->name }}</p>
                                     <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ $appt->user->email }}</p>
@@ -127,11 +137,11 @@
                             <span class="w-6 h-6 bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-full text-xs font-bold flex items-center justify-center shrink-0">{{ $index + 1 }}</span>
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-semibold text-slate-750 dark:text-slate-300 truncate leading-tight">{{ $vaccine->name }}</p>
-                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">{{ $vaccine->appointments_count }} allocations</p>
+                                <p class="text-xs text-slate-400 dark:text-slate-400 mt-1">{{ $vaccine->appointments_count }} allocations</p>
                             </div>
                         </div>
                     @empty
-                        <p class="text-sm text-slate-450 dark:text-slate-500">No stats gathered yet.</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">No stats gathered yet.</p>
                     @endforelse
                 </div>
             </div>
@@ -141,15 +151,15 @@
                 <h3 class="font-bold text-slate-800 dark:text-white mb-3">Quick Actions</h3>
                 <div class="space-y-2">
                     <a href="{{ route('admin.vaccines.create') }}" class="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800/40 p-2.5 rounded-xl transition-colors font-semibold group">
-                        <svg class="w-4 h-4 text-slate-405 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                         Add New Vaccine
                     </a>
                     <a href="{{ route('admin.centers.create') }}" class="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800/40 p-2.5 rounded-xl transition-colors font-semibold group">
-                        <svg class="w-4 h-4 text-slate-405 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                         Add New Center
                     </a>
                     <a href="{{ route('admin.appointments.index') }}" class="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800/40 p-2.5 rounded-xl transition-colors font-semibold group">
-                        <svg class="w-4 h-4 text-slate-405 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                         Manage Appointments
                     </a>
                 </div>

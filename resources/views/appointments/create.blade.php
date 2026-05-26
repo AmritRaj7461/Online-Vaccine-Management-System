@@ -3,11 +3,48 @@
 @section('title', 'Book Appointment')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-200">
+@php
+    $vaccinesJson = $vaccines->map(function($v) {
+        return [
+            'id' => $v->id,
+            'name' => $v->name,
+            'manufacturer' => $v->manufacturer,
+            'days_between_doses' => $v->days_between_doses,
+            'doses_required' => $v->doses_required,
+            'price' => $v->price,
+            'stock' => $v->stock,
+        ];
+    })->toJson();
+
+    $dateSlots = [];
+    for ($i = 0; $i < 7; $i++) {
+        $d = now()->addDays($i);
+        $dateSlots[] = [
+            'value' => $d->toDateString(),
+            'day' => $d->format('D'),
+            'num' => $d->format('d'),
+            'month' => $d->format('M'),
+            'label' => $d->format('d M Y'),
+        ];
+    }
+    $dateSlotsJson = json_encode($dateSlots);
+
+    $morningSlots = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00'];
+    $afternoonSlots = ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30'];
+@endphp
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-200"
+     x-data="{ 
+         selectedVaccineId: '{{ old('vaccine_id', $selectedVaccine?->id) }}', 
+         vaccines: {{ $vaccinesJson }},
+         selectedDate: '{{ old('appointment_date', date('Y-m-d')) }}',
+         dateSlots: {{ $dateSlotsJson }},
+         selectedTime: '{{ old('appointment_time') }}'
+     }">
 
     {{-- Header --}}
     <div class="mb-8">
-        <a href="{{ route('user.appointments.index') }}" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors mb-3">
+        <a href="{{ route('user.appointments.index') }}" class="inline-flex items-center gap-1.5 text-sm text-slate-505 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors mb-3">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             Back to appointments
         </a>
@@ -37,32 +74,63 @@
 
             {{-- Vaccine Selection --}}
             <div class="mb-5">
-                <label for="vaccine_id" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Select Vaccine <span class="text-rose-500">*</span>
+                <label for="vaccine_id" class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
+                    Select Vaccine <span class="text-rose-550">*</span>
                 </label>
-                <select name="vaccine_id" id="vaccine_id" required
-                    class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border @error('vaccine_id') border-rose-400 bg-rose-50 dark:bg-rose-950/20 @else border-slate-200 dark:border-slate-800 @enderror rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all">
+                <select name="vaccine_id" id="vaccine_id" required x-model="selectedVaccineId"
+                    class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border @error('vaccine_id') border-rose-400 bg-rose-50 dark:bg-rose-950/20 @else border-slate-200 dark:border-slate-800 @enderror rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all cursor-pointer">
                     <option value="" class="dark:bg-[#0b0f19]">-- Choose a vaccine --</option>
                     @foreach($vaccines as $vaccine)
-                        <option value="{{ $vaccine->id }}" class="dark:bg-[#0b0f19]"
-                            {{ (old('vaccine_id', $selectedVaccine?->id) == $vaccine->id) ? 'selected' : '' }}>
+                        <option value="{{ $vaccine->id }}" class="dark:bg-[#0b0f19]">
                             {{ $vaccine->name }} ({{ $vaccine->manufacturer }}) · {{ $vaccine->doses_required }} dose(s)
                             @if($vaccine->price > 0) · ₹{{ $vaccine->price }} @else · Free @endif
                         </option>
                     @endforeach
                 </select>
                 @error('vaccine_id')
-                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-400 font-semibold">{{ $message }}</p>
+                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-450 font-semibold">{{ $message }}</p>
                 @enderror
+
+                {{-- Interactive Vaccine Info Preview Card --}}
+                <div x-show="selectedVaccineId" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100" class="mt-3">
+                    <div x-data="{ get vaccine() { return vaccines.find(v => v.id == selectedVaccineId) } }">
+                        <template x-if="vaccine">
+                            <div class="p-4 bg-blue-50/40 dark:bg-blue-950/15 border border-blue-100/60 dark:border-blue-900/30 rounded-xl space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Vaccine Profile</span>
+                                    <span class="text-[10px] font-black px-2 py-0.5 rounded-md bg-emerald-100/70 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-500/10" x-text="vaccine.stock > 0 ? 'Allocated (' + vaccine.stock + ' left)' : 'Out of Stock'"></span>
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs mt-2 pt-2 border-t border-blue-100/50 dark:border-blue-900/20">
+                                    <div>
+                                        <span class="text-slate-400 dark:text-slate-500">Manufacturer</span>
+                                        <span class="font-bold text-slate-800 dark:text-slate-200 mt-0.5 block" x-text="vaccine.manufacturer"></span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 dark:text-slate-500">Required Doses</span>
+                                        <span class="font-bold text-slate-800 dark:text-slate-200 mt-0.5 block" x-text="vaccine.doses_required + ' Dose(s)'"></span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 dark:text-slate-500">Dose Interval</span>
+                                        <span class="font-bold text-slate-800 dark:text-slate-200 mt-0.5 block" x-text="vaccine.days_between_doses + ' Days'"></span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 dark:text-slate-500">Price Details</span>
+                                        <span class="font-bold text-slate-800 dark:text-slate-200 mt-0.5 block" x-text="vaccine.price > 0 ? '₹' + vaccine.price : 'Free / Govt Subs.'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
             </div>
 
             {{-- Center Selection --}}
             <div class="mb-5">
-                <label for="center_id" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Select Vaccination Center <span class="text-rose-500">*</span>
+                <label for="center_id" class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
+                    Select Vaccination Center <span class="text-rose-550">*</span>
                 </label>
                 <select name="center_id" id="center_id" required
-                    class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border @error('center_id') border-rose-400 bg-rose-50 dark:bg-rose-950/20 @else border-slate-200 dark:border-slate-800 @enderror rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all">
+                    class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border @error('center_id') border-rose-400 bg-rose-50 dark:bg-rose-950/20 @else border-slate-200 dark:border-slate-800 @enderror rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all cursor-pointer">
                     <option value="" class="dark:bg-[#0b0f19]">-- Choose a center --</option>
                     @foreach($centers as $center)
                         <option value="{{ $center->id }}" class="dark:bg-[#0b0f19]" {{ old('center_id') == $center->id ? 'selected' : '' }}>
@@ -71,52 +139,88 @@
                     @endforeach
                 </select>
                 @error('center_id')
-                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-400 font-semibold">{{ $message }}</p>
+                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-450 font-semibold">{{ $message }}</p>
                 @enderror
             </div>
 
-            {{-- Date & Time --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                <div>
-                    <label for="appointment_date" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                        Appointment Date <span class="text-rose-500">*</span>
-                    </label>
-                    <input type="date" name="appointment_date" id="appointment_date"
-                        value="{{ old('appointment_date') }}"
-                        min="{{ date('Y-m-d') }}"
-                        required
-                        class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border @error('appointment_date') border-rose-400 bg-rose-50 dark:bg-rose-950/20 @else border-slate-200 dark:border-slate-800 @enderror rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all"/>
-                    @error('appointment_date')
-                        <p class="mt-1 text-xs text-rose-600 dark:text-rose-400 font-semibold">{{ $message }}</p>
-                    @enderror
+            {{-- Date Carousel Picker --}}
+            <div class="mb-5">
+                <label class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2">
+                    Select Date <span class="text-rose-550">*</span>
+                </label>
+                <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+                    <template x-for="slot in dateSlots" :key="slot.value">
+                        <button type="button" @click="selectedDate = slot.value"
+                                class="flex flex-col items-center justify-center min-w-[76px] py-3.5 px-2.5 rounded-2xl border text-center transition-all cursor-pointer select-none"
+                                :class="selectedDate === slot.value ? 
+                                        'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]' : 
+                                        'bg-slate-50 dark:bg-[#0b0f19] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-350 dark:hover:border-slate-700'">
+                            <span class="text-[9px] uppercase font-black tracking-wider opacity-80" x-text="slot.day"></span>
+                            <span class="text-base font-black my-0.5 leading-none" x-text="slot.num"></span>
+                            <span class="text-[9px] uppercase font-black tracking-wider opacity-85" x-text="slot.month"></span>
+                        </button>
+                    </template>
                 </div>
+                <input type="hidden" name="appointment_date" :value="selectedDate" required />
+                @error('appointment_date')
+                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-450 font-semibold">{{ $message }}</p>
+                @enderror
+            </div>
 
-                <div>
-                    <label for="appointment_time" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                        Preferred Time Slot <span class="text-rose-500">*</span>
-                    </label>
-                    <select name="appointment_time" id="appointment_time" required
-                        class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border @error('appointment_time') border-rose-400 bg-rose-50 dark:bg-rose-950/20 @else border-slate-200 dark:border-slate-800 @enderror rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all">
-                        <option value="" class="dark:bg-[#0b0f19]">-- Select time --</option>
-                        @foreach(['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'] as $time)
-                            <option value="{{ $time }}" class="dark:bg-[#0b0f19]" {{ old('appointment_time') === $time ? 'selected' : '' }}>
-                                {{ \Carbon\Carbon::parse($time)->format('h:i A') }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('appointment_time')
-                        <p class="mt-1 text-xs text-rose-600 dark:text-rose-400 font-semibold">{{ $message }}</p>
-                    @enderror
+            {{-- Visual Time Slot Grid --}}
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2.5">
+                    Select Time Slot <span class="text-rose-550">*</span>
+                </label>
+                
+                <div class="space-y-4">
+                    {{-- Morning Session --}}
+                    <div>
+                        <span class="text-[9px] uppercase font-black text-slate-400 dark:text-slate-500 tracking-wider block mb-1.5">Morning Session</span>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                            @foreach($morningSlots as $time)
+                                <button type="button" @click="selectedTime = '{{ $time }}'"
+                                        class="py-2.5 px-3 rounded-xl border text-center transition-all cursor-pointer text-xs font-bold flex items-center justify-center gap-1.5"
+                                        :class="selectedTime === '{{ $time }}' ? 
+                                                'bg-blue-650 border-blue-650 text-white shadow-sm shadow-blue-500/20' : 
+                                                'bg-slate-50 dark:bg-[#0b0f19] border-slate-200 dark:border-slate-800/80 text-slate-700 dark:text-slate-300 hover:border-slate-350 dark:hover:border-slate-750'">
+                                    <svg x-show="selectedTime === '{{ $time }}'" class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                    {{ \Carbon\Carbon::parse($time)->format('h:i A') }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    
+                    {{-- Afternoon Session --}}
+                    <div>
+                        <span class="text-[9px] uppercase font-black text-slate-400 dark:text-slate-500 tracking-wider block mb-1.5">Afternoon Session</span>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                            @foreach($afternoonSlots as $time)
+                                <button type="button" @click="selectedTime = '{{ $time }}'"
+                                        class="py-2.5 px-3 rounded-xl border text-center transition-all cursor-pointer text-xs font-bold flex items-center justify-center gap-1.5"
+                                        :class="selectedTime === '{{ $time }}' ? 
+                                                'bg-blue-650 border-blue-650 text-white shadow-sm shadow-blue-500/20' : 
+                                                'bg-slate-50 dark:bg-[#0b0f19] border-slate-200 dark:border-slate-800/80 text-slate-700 dark:text-slate-300 hover:border-slate-350 dark:hover:border-slate-750'">
+                                    <svg x-show="selectedTime === '{{ $time }}'" class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                    {{ \Carbon\Carbon::parse($time)->format('h:i A') }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
+                <input type="hidden" name="appointment_time" :value="selectedTime" required />
+                @error('appointment_time')
+                    <p class="mt-1 text-xs text-rose-600 dark:text-rose-450 font-semibold">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Dose Number --}}
             <div class="mb-5">
-                <label for="dose_number" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Dose Number <span class="text-rose-500">*</span>
+                <label for="dose_number" class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
+                    Dose Number <span class="text-rose-550">*</span>
                 </label>
                 <select name="dose_number" id="dose_number" required
-                    class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all">
+                    class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all cursor-pointer">
                     @for($i = 1; $i <= 5; $i++)
                         <option value="{{ $i }}" class="dark:bg-[#0b0f19]" {{ old('dose_number', 1) == $i ? 'selected' : '' }}>
                             Dose {{ $i }} {{ $i === 1 ? '(First dose)' : ($i === 2 ? '(Second dose)' : ($i === 3 ? '(Booster)' : '')) }}
@@ -127,7 +231,7 @@
 
             {{-- Notes --}}
             <div class="mb-6">
-                <label for="notes" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Notes <span class="text-slate-400 dark:text-slate-500 font-normal text-xs">(optional)</span></label>
+                <label for="notes" class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">Notes <span class="text-slate-400 dark:text-slate-500 font-normal text-xs">(optional)</span></label>
                 <textarea name="notes" id="notes" rows="3" placeholder="Any allergies, dietary requirements, or pre-existing conditions..."
                     class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all resize-none">{{ old('notes') }}</textarea>
             </div>
@@ -151,4 +255,15 @@
         </form>
     </div>
 </div>
+
+<style>
+    /* Custom style to hide scrollbars for horizontal date picker */
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
 @endsection

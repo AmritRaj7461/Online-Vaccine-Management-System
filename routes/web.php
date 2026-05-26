@@ -62,7 +62,15 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
     Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
     Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+    Route::get('/appointments/{appointment}/certificate', [AppointmentController::class, 'certificate'])->name('appointments.certificate');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Public Routes (Additional)
+|--------------------------------------------------------------------------
+*/
+Route::get('/verify-certificate/{appointment}', [AppointmentController::class, 'verifyCertificate'])->name('verify.certificate');
 
 /*
 |--------------------------------------------------------------------------

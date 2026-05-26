@@ -77,7 +77,7 @@
                 <input type="text" 
                        x-model="search" 
                        placeholder="Search name, manufacturer, or details..." 
-                       class="w-full pl-12 pr-4 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-white placeholder-slate-405 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all text-sm"/>
+                       class="w-full pl-12 pr-4 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all text-sm"/>
             </div>
 
             {{-- Select filters --}}
@@ -86,32 +86,32 @@
                 {{-- Dose Filter --}}
                 <div class="flex-1 sm:flex-initial">
                     <select x-model="doseFilter" 
-                            class="w-full bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-350 py-2.5 px-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer">
-                        <option value="all">All Dosage Schemes</option>
-                        <option value="1">Single Dose Only</option>
-                        <option value="2">2 Doses Required</option>
-                        <option value="multi">Multiple (>2) Doses</option>
+                            class="w-full bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-2.5 px-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer">
+                        <option class="dark:bg-[#151c2c]" value="all">All Dosage Schemes</option>
+                        <option class="dark:bg-[#151c2c]" value="1">Single Dose Only</option>
+                        <option class="dark:bg-[#151c2c]" value="2">2 Doses Required</option>
+                        <option class="dark:bg-[#151c2c]" value="multi">Multiple (>2) Doses</option>
                     </select>
                 </div>
 
                 {{-- Price Filter --}}
                 <div class="flex-1 sm:flex-initial">
                     <select x-model="priceFilter" 
-                            class="w-full bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-350 py-2.5 px-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer">
-                        <option value="all">All Pricing Types</option>
-                        <option value="free">Free of Charge</option>
-                        <option value="paid">Paid Vaccines</option>
+                            class="w-full bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-2.5 px-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer">
+                        <option class="dark:bg-[#151c2c]" value="all">All Pricing Types</option>
+                        <option class="dark:bg-[#151c2c]" value="free">Free of Charge</option>
+                        <option class="dark:bg-[#151c2c]" value="paid">Paid Vaccines</option>
                     </select>
                 </div>
 
                 {{-- Sort By --}}
                 <div class="flex-1 sm:flex-initial">
                     <select x-model="sortBy" 
-                            class="w-full bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-350 py-2.5 px-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer">
-                        <option value="name">Sort by Name</option>
-                        <option value="price_asc">Price: Low to High</option>
-                        <option value="price_desc">Price: High to Low</option>
-                        <option value="stock_desc">Available Stock: High to Low</option>
+                            class="w-full bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-2.5 px-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer">
+                        <option class="dark:bg-[#151c2c]" value="name">Sort by Name</option>
+                        <option class="dark:bg-[#151c2c]" value="price_asc">Price: Low to High</option>
+                        <option class="dark:bg-[#151c2c]" value="price_desc">Price: High to Low</option>
+                        <option class="dark:bg-[#151c2c]" value="stock_desc">Available Stock: High to Low</option>
                     </select>
                 </div>
 
@@ -123,7 +123,7 @@
     <div x-show="filteredVaccines.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up delay-200">
         
         <template x-for="vaccine in filteredVaccines" :key="vaccine.id">
-            <div class="bg-white dark:bg-[#151c2c] rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col justify-between group">
+            <div class="bg-white dark:bg-[#151c2c] rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col justify-between group hover-shimmer">
                 
                 <div>
                     {{-- Card Header --}}
@@ -140,18 +140,18 @@
                     {{-- Card Body --}}
                     <div class="p-5">
                         <h3 class="font-bold text-slate-800 dark:text-white text-lg leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" x-text="vaccine.name"></h3>
-                        <p class="text-xs text-slate-450 dark:text-slate-500 mt-1">by <span x-text="vaccine.manufacturer"></span></p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">by <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="vaccine.manufacturer"></span></p>
 
-                        <p class="text-sm text-slate-600 dark:text-slate-350 mt-3 line-clamp-2 leading-relaxed h-[42px]" x-text="vaccine.description"></p>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 mt-3 line-clamp-2 leading-relaxed h-[42px]" x-text="vaccine.description"></p>
 
                         {{-- Details --}}
                         <div class="grid grid-cols-2 gap-3 mt-4 select-none">
                             <div class="bg-slate-50 dark:bg-[#0b0f19]/45 border border-slate-100 dark:border-slate-800 rounded-xl p-3 text-center">
-                                <p class="text-[9px] text-slate-400 dark:text-slate-500 mb-0.5 font-bold uppercase tracking-wider">Required Doses</p>
+                                <p class="text-[9px] text-slate-500 dark:text-slate-400 mb-0.5 font-bold uppercase tracking-wider">Required Doses</p>
                                 <p class="font-extrabold text-slate-700 dark:text-slate-200" x-text="vaccine.doses_required"></p>
                             </div>
                             <div class="bg-slate-50 dark:bg-[#0b0f19]/45 border border-slate-100 dark:border-slate-800 rounded-xl p-3 text-center">
-                                <p class="text-[9px] text-slate-400 dark:text-slate-500 mb-0.5 font-bold uppercase tracking-wider">Stock Available</p>
+                                <p class="text-[9px] text-slate-500 dark:text-slate-400 mb-0.5 font-bold uppercase tracking-wider">Stock Available</p>
                                 <p class="font-extrabold" 
                                    :class="vaccine.stock < 20 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-700 dark:text-slate-200'"
                                    x-text="vaccine.stock"></p>
