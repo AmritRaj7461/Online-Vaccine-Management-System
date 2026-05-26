@@ -32,11 +32,13 @@ class AuthController extends Controller
 
             if (Auth::user()->isAdmin()) {
                 return redirect()->route('admin.dashboard')
-                    ->with('success', 'Welcome back, Admin!');
+                    ->with('success', 'Welcome back, Admin!')
+                    ->with('celebrate', true);
             }
 
             return redirect()->route('user.dashboard')
-                ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
+                ->with('success', 'Welcome back, ' . Auth::user()->name . '!')
+                ->with('celebrate', true);
         }
 
         return back()
@@ -77,7 +79,8 @@ class AuthController extends Controller
         $request->session()->put('user_role', $user->role);
 
         return redirect()->route('user.dashboard')
-            ->with('success', 'Account created successfully! Welcome, ' . $user->name . '!');
+            ->with('success', 'Account created successfully! Welcome, ' . $user->name . '!')
+            ->with('celebrate', true);
     }
 
     

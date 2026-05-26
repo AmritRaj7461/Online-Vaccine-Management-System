@@ -115,7 +115,7 @@
 
     {{-- Session Flash Dispatchers --}}
     @if(session('success'))
-        <div x-data x-init="$nextTick(() => $dispatch('toast', { type: 'success', title: 'Success', message: '{{ addslashes(session('success')) }}' }))"></div>
+        <div x-data x-init="$nextTick(() => $dispatch('toast', { type: 'success', title: 'Success', message: '{{ addslashes(session('success')) }}', celebrate: {{ session('celebrate', false) ? 'true' : 'false' }} }))"></div>
     @endif
     @if(session('error'))
         <div x-data x-init="$nextTick(() => $dispatch('toast', { type: 'error', title: 'Error Failed', message: '{{ addslashes(session('error')) }}' }))"></div>
@@ -268,18 +268,18 @@
                         duration: duration
                     });
 
-                    // Trigger micro-delight confetti on success toasts
-                    if (detail.type === 'success') {
+                    // Trigger micro-delight confetti ONLY on login/register (celebrate flag)
+                    if (detail.celebrate === true) {
                         setTimeout(() => {
                             if (typeof confetti === 'function') {
                                 confetti({
-                                    particleCount: 80,
-                                    spread: 50,
-                                    origin: { y: 0.8 },
-                                    colors: ['#38bdf8', '#3b82f6', '#10b981', '#fbbf24']
+                                    particleCount: 120,
+                                    spread: 70,
+                                    origin: { y: 0.6 },
+                                    colors: ['#38bdf8', '#3b82f6', '#10b981', '#fbbf24', '#a78bfa']
                                 });
                             }
-                        }, 100);
+                        }, 300);
                     }
                     
                     // Animate entry

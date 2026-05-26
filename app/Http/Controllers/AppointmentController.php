@@ -120,15 +120,54 @@ class AppointmentController extends Controller
 
         $appointment->load(['vaccine', 'center', 'user']);
 
-        // Generate cryptographically signed public verification URL
-        $verificationUrl = URL::signedRoute('verify.certificate', ['appointment' => $appointment->id]);
+        // Build the signed URL using the actual request host, not APP_URL.
+        // This prevents signature mismatches when APP_URL=http://localhost but
+        // the app is accessed from a different host (e.g. Render, ngrok, phone scan).
+        $verificationUrl = URL::signedRoute(
+            'verify.certificate',
+            ['appointment' => $appointment->id],
+            null,       // no expiry
+            true        // absolute = true
+        );
+
+        // Swap out the APP_URL host with the actual request host so that
+        // the QR code works from any device that can reach the server.
+        $appHost   = parse_url(config('app.url'), PHP_URL_HOST);
+        $realHost  = request()->getSchemeAndHttpHost();
+        if ($appHost && $appHost !== request()->getHost()) {
+            $verificationUrl = str_replace(
+                config('app.url'),
+                $realHost,
+                $verificationUrl
+            );
+        }
 
         return view('appointments.certificate', compact('appointment', 'verificationUrl'));
     }
 
     public function verifyCertificate(Request $request, Appointment $appointment)
     {
-        if (!$request->hasValidSignature()) {
+        // Validate the signed URL signature. We also normalise the URL to
+        // tolerate host mismatches that occur when APP_URL differs from the
+        // actual server host (e.g. localhost vs. Render deployment URL).
+        $valid = $request->hasValidSignature();
+
+        if (!$valid) {
+            // Re-check by swapping the real host back to APP_URL's host and
+            // re-testing, to tolerate host mismatch in older signed URLs.
+            try {
+                $appUrl    = rtrim(config('app.url'), '/');
+                $realUrl   = rtrim($request->getSchemeAndHttpHost(), '/');
+                $fullUrl   = $request->fullUrl();
+                $swapped   = str_replace($realUrl, $appUrl, $fullUrl);
+                $fakeReq   = \Illuminate\Http\Request::create($swapped);
+                $valid     = URL::hasValidSignature($fakeReq);
+            } catch (\Throwable $e) {
+                $valid = false;
+            }
+        }
+
+        if (!$valid) {
             return response()->view('appointments.verify', [
                 'success' => false,
                 'message' => 'Invalid or Tampered Certificate Signature! The record authenticity could not be verified.'

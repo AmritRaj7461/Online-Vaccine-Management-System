@@ -19,8 +19,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    // If already authenticated, send straight to the dashboard
+    if (auth()->check()) {
+        return auth()->user()->isAdmin()
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('user.dashboard');
+    }
+    return view('landing');
+})->name('home');
+
 
 /*
 |--------------------------------------------------------------------------

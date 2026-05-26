@@ -94,8 +94,8 @@
 
 {{-- QRCode.js (renders to canvas — no cross-origin issues for html2canvas) --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-{{-- html2canvas --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{{-- html-to-image: handles modern CSS (oklab/oklch) unlike html2canvas --}}
+<script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
 
 <script>
     // Generate QR code as an inline canvas (same-origin, no CORS issues)
@@ -124,10 +124,13 @@
 
     function downloadPass() {
         const card = document.getElementById('wallet-card');
+        const btn  = event.currentTarget;
 
-        // Remove hover/scale transforms so capture is pixel-accurate
-        const prevTransform = card.style.transform;
-        card.classList.remove('hover:scale-[1.01]');
+        // Visual loading state
+        btn.textContent = 'Generating…';
+        btn.disabled = true;
+
+        // Remove hover classes that might affect capture
         card.style.transform = 'none';
 
         // Subtle audio feedback
@@ -135,35 +138,37 @@
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            osc.connect(gain); gain.connect(audioCtx.destination);
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(660, audioCtx.currentTime);
             gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
             osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-            osc.stop(audioCtx.currentTime + 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+            osc.stop(audioCtx.currentTime + 0.15);
         } catch (e) {}
 
-        html2canvas(card, {
-            backgroundColor: null,   // keep rounded-corner transparency
-            scale: 3,                 // 3× for crisp retina-quality output
-            logging: false,
-            useCORS: false,           // all resources are now same-origin
-            allowTaint: false
-        }).then(canvas => {
-            card.style.transform = prevTransform;
+        // html-to-image handles modern CSS colors (oklab/oklch) natively
+        htmlToImage.toPng(card, {
+            pixelRatio: 3,
+            cacheBust: true,
+            skipAutoScale: false,
+            style: { transform: 'none', boxShadow: 'none' }
+        }).then(dataUrl => {
+            btn.textContent = 'Download Pass';
+            btn.disabled = false;
 
             const link = document.createElement('a');
             link.download = 'VacciCare_Wallet_Pass.png';
-            link.href = canvas.toDataURL('image/png');
+            link.href = dataUrl;
             link.click();
         }).catch(err => {
-            card.style.transform = prevTransform;
-            console.error('html2canvas error:', err);
+            btn.textContent = 'Download Pass';
+            btn.disabled = false;
+            console.error('html-to-image error:', err);
             alert('Download failed. Please try again in a moment.');
         });
     }
 </script>
 @endsection
+
 
