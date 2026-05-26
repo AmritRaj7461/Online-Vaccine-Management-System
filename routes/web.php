@@ -52,6 +52,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // Aadhaar e-KYC Verification
     Route::post('/aadhar/send-otp', [\App\Http\Controllers\AadharVerificationController::class, 'sendOtp'])->name('aadhar.send-otp');
     Route::post('/aadhar/verify-otp', [\App\Http\Controllers\AadharVerificationController::class, 'verifyOtp'])->name('aadhar.verify-otp');
+    Route::get('/aadhar-exemption-pass', [UserFeatureController::class, 'aadharExemptionPass'])->name('aadhar.exemption-pass');
 
     // Vaccines (view only for users)
     Route::get('/vaccines', [VaccineController::class, 'index'])->name('vaccines.index');

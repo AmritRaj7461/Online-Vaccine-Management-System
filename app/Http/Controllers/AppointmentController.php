@@ -26,6 +26,10 @@ class AppointmentController extends Controller
 
     public function create(Request $request)
     {
+        if (!Auth::user()->aadhar_verified) {
+            return redirect()->route('user.aadhar.exemption-pass');
+        }
+
         $vaccines = Vaccine::where('status', 'available')->where('stock', '>', 0)->get();
         $centers  = Center::where('status', 'active')->get();
         $selectedVaccine = $request->query('vaccine_id') ? Vaccine::find($request->query('vaccine_id')) : null;
@@ -35,6 +39,10 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::user()->aadhar_verified) {
+            return redirect()->route('user.aadhar.exemption-pass');
+        }
+
         $validated = $request->validate([
             'vaccine_id'       => ['required', 'exists:vaccines,id'],
             'center_id'        => ['required', 'exists:centers,id'],

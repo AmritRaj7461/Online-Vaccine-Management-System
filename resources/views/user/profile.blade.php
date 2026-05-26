@@ -352,57 +352,84 @@
         <div class="space-y-6">
             
             {{-- Digital Aadhar Preview --}}
-            <div class="relative w-full h-[224px] max-w-sm mx-auto bg-gradient-to-tr from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border-2 border-emerald-500/20 dark:border-emerald-500/10 rounded-2xl p-5 shadow-md flex flex-col justify-between overflow-hidden group select-none transition-colors duration-200">
+            <div class="relative w-full h-[240px] max-w-sm mx-auto bg-gradient-to-br from-[#fcfbf7] via-[#f7fafd] to-[#f4faf7] dark:from-[#111726] dark:via-[#131b2f] dark:to-[#0f1524] border-2 border-amber-500/30 dark:border-amber-500/15 rounded-2xl shadow-xl flex flex-col justify-between overflow-hidden group select-none transition-all duration-300">
                 
-                {{-- Decorative background emblem --}}
-                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent pointer-events-none"></div>
-                <div class="absolute right-4 bottom-4 w-28 h-28 bg-emerald-500/5 rounded-full blur-xl pointer-events-none"></div>
+                {{-- Tricolor Header Bar --}}
+                <div class="h-1.5 w-full flex shrink-0">
+                    <div class="w-1/3 bg-orange-500"></div>
+                    <div class="w-1/3 bg-white"></div>
+                    <div class="w-1/3 bg-emerald-600"></div>
+                </div>
+
+                {{-- Decorative background watermark (Fingerprint UIDAI Logo) --}}
+                <div class="absolute inset-0 opacity-[0.04] dark:opacity-[0.02] flex items-center justify-center pointer-events-none">
+                    <svg class="w-48 h-48 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.92c-.33.05-.67.08-1 .08s-.67-.03-1-.08v-2.05c.33.08.66.13 1 .13s.67-.05 1-.13v2.05zm0-3.1c-.33.05-.67.08-1 .08s-.67-.03-1-.08v-2.12c.33.05.67.08 1 .08s.67-.03 1-.08v2.12zm0-3.17c-.33.05-.67.08-1 .08s-.67-.03-1-.08V8.45c.33.05.67.08 1 .08s.67-.03 1-.08v5.1zm0-6.19c-.33.05-.67.08-1 .08s-.67-.03-1-.08V5.08c.33.05.67.08 1 .08s.67-.03 1-.08v2.37z"/>
+                    </svg>
+                </div>
 
                 {{-- Card Header --}}
-                <div class="flex items-center justify-between border-b border-emerald-500/10 pb-2 z-10">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-extrabold text-sm shadow-sm shadow-emerald-200 dark:shadow-none shrink-0">印</div>
+                <div class="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800/60 px-4 py-2 z-10 bg-slate-50/50 dark:bg-slate-900/20">
+                    <div class="flex items-center gap-1.5">
+                        {{-- Ashoka Pillar Motif --}}
+                        <div class="w-6 h-6 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md flex items-center justify-center shrink-0 shadow-sm">
+                            <span class="text-[10px] font-black text-slate-800 dark:text-slate-100">印</span>
+                        </div>
                         <div>
-                            <p class="text-[9px] font-bold text-emerald-800 dark:text-emerald-400 leading-none">GOVERNMENT OF INDIA</p>
-                            <p class="text-[10px] font-black text-slate-800 dark:text-slate-100 tracking-wide mt-0.5 leading-none">UNIQUE IDENTIFICATION AUTHORITY</p>
+                            <p class="text-[8px] font-black text-slate-500 dark:text-slate-400 leading-none">भारत सरकार · GOVERNMENT OF INDIA</p>
+                            <p class="text-[9px] font-extrabold text-slate-800 dark:text-slate-200 tracking-wide mt-0.5 leading-none">भारतीय विशिष्ट पहचान प्राधिकरण</p>
                         </div>
                     </div>
                     
                     {{-- Verified Tick Badge inside card --}}
-                    <div class="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/25 px-2 py-0.5 rounded-full text-[9px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider"
+                    <div class="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded-md text-[8px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider"
                          x-show="isVerified"
                          x-transition.opacity>
-                        <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                        e-KYC
+                        <svg class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                        e-KYC Verified
                     </div>
                 </div>
 
                 {{-- Card Body --}}
-                <div class="flex gap-4 my-2 z-10">
-                    {{-- User Photo Placeholder --}}
-                    <div class="w-16 h-20 bg-slate-200/80 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg flex items-center justify-center shrink-0 shadow-inner">
+                <div class="flex gap-4 px-5 my-2.5 z-10 flex-1 items-center">
+                    {{-- User Photo Frame --}}
+                    <div class="relative w-16 h-20 bg-slate-200/80 dark:bg-slate-800 border-2 border-slate-350 dark:border-slate-700 rounded-md flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
                         <svg class="w-10 h-10 text-slate-400 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
+                        
+                        {{-- Holographic line --}}
+                        <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-orange-400 via-white to-emerald-500 opacity-60"></div>
                     </div>
 
                     {{-- Patient details --}}
-                    <div class="flex-1 min-w-0 flex flex-col justify-center">
-                        <p class="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-400 leading-none">Name / नाम</p>
-                        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 leading-normal truncate" x-text="name ? name : 'Name'"></p>
+                    <div class="flex-1 min-w-0 flex flex-col justify-center text-xs">
+                        <div class="mb-1.5">
+                            <p class="text-[8px] font-black text-slate-455 dark:text-slate-500 leading-none uppercase">Name / नाम</p>
+                            <p class="font-extrabold text-slate-850 dark:text-slate-100 mt-0.5 truncate" x-text="name ? name : 'Name'"></p>
+                        </div>
 
-                        <p class="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-400 leading-none mt-2">DOB / जन्म तिथि</p>
-                        <p class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-0.5 leading-none">{{ $user->dob ? $user->dob->format('d/m/Y') : '--/--/----' }}</p>
-
-                        <p class="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-400 leading-none mt-2">Gender / लिंग</p>
-                        <p class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-0.5 leading-none">Male / पुरुष</p>
+                        <div class="grid grid-cols-2 gap-2 mt-1">
+                            <div>
+                                <p class="text-[8px] font-black text-slate-455 dark:text-slate-500 leading-none uppercase">DOB / जन्म तिथि</p>
+                                <p class="font-bold text-slate-700 dark:text-slate-200 mt-0.5">{{ $user->dob ? $user->dob->format('d/m/Y') : '--/--/----' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[8px] font-black text-slate-455 dark:text-slate-500 leading-none uppercase">Gender / लिंग</p>
+                                <p class="font-bold text-slate-700 dark:text-slate-200 mt-0.5">Male / पुरुष</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {{-- Card Footer --}}
-                <div class="flex items-center justify-between border-t border-emerald-500/10 pt-2 z-10">
-                    <p class="text-base sm:text-lg font-black text-emerald-800 dark:text-emerald-400 font-mono tracking-widest leading-normal mx-auto font-extrabold"
+                <div class="bg-slate-50/80 dark:bg-slate-900/40 border-t border-slate-200/60 dark:border-slate-800/60 py-2.5 px-4 flex flex-col items-center justify-center gap-1 z-10 shrink-0">
+                    {{-- Large Bold Aadhaar number --}}
+                    <p class="text-lg font-black text-slate-800 dark:text-slate-200 font-mono tracking-widest leading-none"
                        x-text="formatAadhar(aadhar) ? formatAadhar(aadhar) : '0000 0000 0000'"></p>
+                    
+                    {{-- Slogan --}}
+                    <p class="text-[7px] font-extrabold text-slate-400 dark:text-slate-500 tracking-wider leading-none uppercase">मेरा आधार, मेरी पहचान</p>
                 </div>
             </div>
 

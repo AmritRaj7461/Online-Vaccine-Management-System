@@ -110,7 +110,17 @@
                                     </div>
                                     <div>
                                         <p class="font-semibold text-slate-800 dark:text-white leading-tight">{{ $appt->user->name }}</p>
-                                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ $appt->user->email }}</p>
+                                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5 leading-none">{{ $appt->user->email }}</p>
+                                        @if($appt->user->aadhar_verified)
+                                            <span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-600 dark:text-emerald-450 mt-1">
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1-1 0 00-1.414-1.414L9 10.586 7.707 9.293a1-1 0 00-1.414 1.414l2 2a1-1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                                Aadhaar: {{ $appt->user->aadhar_number ? substr($appt->user->aadhar_number, 0, 4) . ' ' . substr($appt->user->aadhar_number, 4, 4) . ' ' . substr($appt->user->aadhar_number, 8, 4) : 'Verified' }}
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1 text-[9px] font-black text-rose-600 dark:text-rose-400 mt-1 uppercase tracking-wider">
+                                                ⚠️ Exemption Pass User
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -135,18 +145,31 @@
                                 </span>
                             </td>
                             <td class="px-5 py-4">
-                                <form method="POST" action="{{ route('admin.appointments.update', $appt) }}" class="flex items-center gap-1.5">
+                                <form method="POST" action="{{ route('admin.appointments.update', $appt) }}" class="flex flex-col gap-2">
                                     @csrf @method('PUT')
-                                    <select name="status"
-                                            class="text-xs px-2 py-1.5 bg-slate-50 dark:bg-[#0b0f19] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors">
-                                        @foreach(['pending','confirmed','completed','cancelled'] as $s)
-                                            <option value="{{ $s }}" {{ $appt->status === $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit"
-                                            class="text-xs px-3 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-lg hover:from-sky-600 hover:to-blue-700 font-bold transition-all cursor-pointer active:scale-95 shadow-sm hover:shadow-md">
-                                        Save
-                                    </button>
+                                    <div class="flex items-center gap-1.5">
+                                        <select name="status"
+                                                class="text-xs px-2 py-1.5 bg-slate-50 dark:bg-[#0b0f19] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors">
+                                            @foreach(['pending','confirmed','completed','cancelled'] as $s)
+                                                <option value="{{ $s }}" {{ $appt->status === $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit"
+                                                class="text-xs px-3 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-lg hover:from-sky-600 hover:to-blue-700 font-bold transition-all cursor-pointer active:scale-95 shadow-sm hover:shadow-md">
+                                            Save
+                                        </button>
+                                    </div>
+                                    @if(!$appt->user->aadhar_verified)
+                                        <div class="flex flex-col gap-1 mt-0.5 p-2 bg-rose-50/50 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/20 rounded-xl max-w-[160px]">
+                                            <span class="text-[9px] font-bold text-rose-700 dark:text-rose-400 uppercase tracking-wider block">Verify Aadhaar details</span>
+                                            <input type="text" name="aadhar_number" placeholder="12-digit Aadhaar" maxlength="12"
+                                                   class="text-[10px] px-2 py-1 bg-white dark:bg-[#0b0f19] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/30 w-full" />
+                                            <label class="flex items-center gap-1 text-[9px] font-bold text-slate-600 dark:text-slate-400 cursor-pointer mt-0.5">
+                                                <input type="checkbox" name="aadhar_verified" value="1" class="rounded border-slate-350 text-blue-600 focus:ring-blue-500 w-3 h-3" />
+                                                Mark Verified
+                                            </label>
+                                        </div>
+                                    @endif
                                 </form>
                             </td>
                         </tr>

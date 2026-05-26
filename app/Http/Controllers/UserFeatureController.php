@@ -191,4 +191,13 @@ class UserFeatureController extends Controller
         return redirect()->route('user.appointments.wellness', $appointment)
             ->with('success', 'Wellness details logged successfully! Check the medical guidance below.');
     }
+
+    /**
+     * Render the Aadhaar Exemption & Vaccine Entry Pass.
+     */
+    public function aadharExemptionPass()
+    {
+        $user = Auth::user();
+        return view('appointments.exemption_pass', compact('user'));
+    }
 }

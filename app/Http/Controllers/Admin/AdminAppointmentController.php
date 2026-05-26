@@ -52,9 +52,32 @@ class AdminAppointmentController extends Controller
     {
         $request->validate([
             'status' => ['required', 'in:pending,confirmed,completed,cancelled'],
+            'aadhar_number' => ['nullable', 'numeric', 'digits:12'],
+            'aadhar_verified' => ['nullable'],
         ]);
 
         $appointment->update(['status' => $request->status]);
+
+        // Update patient Aadhaar details if provided
+        $user = $appointment->user;
+        $userUpdate = [];
+        if ($request->filled('aadhar_number')) {
+            $userUpdate['aadhar_number'] = $request->aadhar_number;
+        }
+        
+        // If status completed or checkbox ticked, set as verified
+        if ($request->has('aadhar_verified') || $request->status === 'completed') {
+            $userUpdate['aadhar_verified'] = true;
+        } else {
+            // Toggled off check
+            if ($request->has('aadhar_number') && !$request->has('aadhar_verified')) {
+                $userUpdate['aadhar_verified'] = false;
+            }
+        }
+        
+        if (!empty($userUpdate)) {
+            $user->update($userUpdate);
+        }
 
         // Trigger Notification
         $statusLabels = [

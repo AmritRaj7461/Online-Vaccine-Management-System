@@ -171,11 +171,16 @@
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
                                     <h3 class="text-sm font-bold text-amber-600 dark:text-amber-400">Aadhaar Verification Pending</h3>
-                                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">Please verify your Aadhaar registry to unlock appointment bookings.</p>
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">Please verify your Aadhaar to book online, or print the vaccine center entry pass.</p>
                                 </div>
-                                <a href="{{ route('user.profile') }}" class="sm:self-start bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-colors text-center shrink-0">
-                                    Verify e-KYC
-                                </a>
+                                <div class="flex gap-2 sm:self-start shrink-0">
+                                    <a href="{{ route('user.profile') }}" class="bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-colors text-center shrink-0">
+                                        Verify e-KYC
+                                    </a>
+                                    <a href="{{ route('user.aadhar.exemption-pass') }}" class="bg-rose-605 hover:bg-rose-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-colors text-center shrink-0">
+                                        Get Entry Pass 📄
+                                    </a>
+                                </div>
                             </div>
                         @endif
                     </div>
@@ -238,6 +243,10 @@
                                 @if(auth()->user()->aadhar_verified)
                                     <a href="{{ route('user.appointments.create') }}" class="sm:self-start bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all shrink-0">
                                         Book Dose 1
+                                    </a>
+                                @else
+                                    <a href="{{ route('user.aadhar.exemption-pass') }}" class="sm:self-start bg-rose-605 hover:bg-rose-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all shrink-0">
+                                        Get Entry Pass 📄
                                     </a>
                                 @endif
                             </div>
@@ -307,9 +316,15 @@
                                     </p>
                                 </div>
                                 @if($isEligibleNow)
-                                    <a href="{{ route('user.appointments.create', ['vaccine_id' => $activeVaccine->id]) }}" class="sm:self-start bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all shrink-0">
-                                        Book Dose 2
-                                    </a>
+                                    @if(auth()->user()->aadhar_verified)
+                                        <a href="{{ route('user.appointments.create', ['vaccine_id' => $activeVaccine->id]) }}" class="sm:self-start bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all shrink-0">
+                                            Book Dose 2
+                                        </a>
+                                    @else
+                                        <a href="{{ route('user.aadhar.exemption-pass') }}" class="sm:self-start bg-rose-605 hover:bg-rose-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm transition-all shrink-0">
+                                            Get Entry Pass 📄
+                                        </a>
+                                    @endif
                                 @else
                                     <span class="sm:self-start bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border border-slate-200 dark:border-slate-800 select-none shrink-0 cursor-not-allowed">
                                         Soon

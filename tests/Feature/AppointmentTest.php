@@ -21,12 +21,14 @@ class AppointmentTest extends TestCase
         parent::setUp();
 
         $this->user = User::create([
-            'name'     => 'Test Patient',
-            'email'    => 'patient@example.com',
-            'phone'    => '1234567890',
-            'dob'      => '1990-01-01',
-            'password' => bcrypt('password'),
-            'role'     => 'user',
+            'name'            => 'Test Patient',
+            'email'           => 'patient@example.com',
+            'phone'           => '1234567890',
+            'dob'             => '1990-01-01',
+            'password'        => bcrypt('password'),
+            'role'            => 'user',
+            'aadhar_number'   => '123456789012',
+            'aadhar_verified' => true,
         ]);
 
         $this->vaccine = Vaccine::create([
