@@ -75,10 +75,9 @@
 
             {{-- Secure QR Code scan section --}}
             <div class="border-t border-white/10 pt-5 flex flex-col items-center gap-3">
-                <div class="w-36 h-36 bg-white rounded-2xl p-2.5 flex items-center justify-center shadow-lg relative">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode($verificationUrl) }}" 
-                         alt="Verification QR Code" 
-                         class="w-full h-full object-contain" />
+                <div class="w-36 h-36 bg-white rounded-2xl p-2.5 flex items-center justify-center shadow-lg relative overflow-hidden">
+                    {{-- QR rendered client-side to avoid CORS/tainted-canvas issues --}}
+                    <div id="qr-code-render" class="w-full h-full flex items-center justify-center"></div>
                 </div>
                 <span class="text-[9px] font-black text-slate-400 tracking-widest uppercase">Digital Pass QR Code</span>
             </div>
@@ -93,16 +92,45 @@
     </div>
 </div>
 
+{{-- QRCode.js (renders to canvas — no cross-origin issues for html2canvas) --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+{{-- html2canvas --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <script>
+    // Generate QR code as an inline canvas (same-origin, no CORS issues)
+    document.addEventListener('DOMContentLoaded', function () {
+        const qrContainer = document.getElementById('qr-code-render');
+        new QRCode(qrContainer, {
+            text: "{{ addslashes($verificationUrl) }}",
+            width: 110,
+            height: 110,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+        });
+
+        // Style the generated canvas/img to fill the container
+        setTimeout(() => {
+            const qrImg = qrContainer.querySelector('img, canvas');
+            if (qrImg) {
+                qrImg.style.width = '100%';
+                qrImg.style.height = '100%';
+                qrImg.style.objectFit = 'contain';
+                qrImg.style.borderRadius = '8px';
+            }
+        }, 100);
+    });
+
     function downloadPass() {
         const card = document.getElementById('wallet-card');
-        
-        // Temporarily clear styling modifications for accurate capture
+
+        // Remove hover/scale transforms so capture is pixel-accurate
         const prevTransform = card.style.transform;
+        card.classList.remove('hover:scale-[1.01]');
         card.style.transform = 'none';
 
-        // Play subtle sound feedback
+        // Subtle audio feedback
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = audioCtx.createOscillator();
@@ -118,22 +146,24 @@
         } catch (e) {}
 
         html2canvas(card, {
-            backgroundColor: null, // transparent background for nice rounded corners
-            scale: 3, // high resolution
+            backgroundColor: null,   // keep rounded-corner transparency
+            scale: 3,                 // 3× for crisp retina-quality output
             logging: false,
-            useCORS: true
+            useCORS: false,           // all resources are now same-origin
+            allowTaint: false
         }).then(canvas => {
             card.style.transform = prevTransform;
-            
+
             const link = document.createElement('a');
             link.download = 'VacciCare_Wallet_Pass.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }).catch(err => {
             card.style.transform = prevTransform;
-            console.error("Error generating pass:", err);
-            alert("Could not capture pass. Please try again.");
+            console.error('html2canvas error:', err);
+            alert('Download failed. Please try again in a moment.');
         });
     }
 </script>
 @endsection
+
