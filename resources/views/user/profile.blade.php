@@ -84,14 +84,10 @@
                 }
                 // OTP triggered successfully
                 this.maskedMobile = data.mobile;
-                this.simulatedOtp = data.otp;
                 this.otpSent = true;
                 this.otpValues = ['', '', '', '', '', ''];
                 this.modalOpen = true;
                 this.verificationError = '';
-                
-                // Show UIDAI notification toast
-                this.toastOpen = true;
 
                 // Start countdown timer
                 this.startTimer();
@@ -468,8 +464,8 @@
             {{-- Body contents --}}
             <div class="space-y-6">
                 <div class="text-center">
-                    <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">Enter 6-Digit OTP</p>
-                    <p class="text-xs text-slate-450 dark:text-slate-400 mt-1.5 leading-relaxed">We have triggered a security verification code to your UIDAI registered mobile number ending in <span class="font-black text-slate-700 dark:text-slate-200" x-text="maskedMobile"></span>.</p>
+                    <p class="text-sm font-semibold text-slate-600 dark:text-slate-350">Enter 6-Digit OTP</p>
+                    <p class="text-xs text-slate-450 dark:text-slate-400 mt-1.5 leading-relaxed">A secure e-KYC verification code has been sent to your **registered email address**. Please check your inbox to retrieve the code.</p>
                 </div>
 
                 {{-- Segmented OTP Inputs --}}
@@ -519,36 +515,7 @@
         </div>
     </div>
 
-    {{-- Simulated Government Aadhaar Portal Notification Toast --}}
-    <div class="fixed top-5 right-5 z-[100] max-w-sm w-full bg-slate-900 dark:bg-[#151c2c] border border-emerald-500/20 rounded-2xl p-4 shadow-2xl transition-all duration-500 transform"
-         x-show="toastOpen"
-         x-transition:enter="translate-x-full opacity-0"
-         x-transition:enter-start="translate-x-full opacity-0"
-         x-transition:enter-end="translate-x-0 opacity-100"
-         x-transition:leave="translate-x-full opacity-0"
-         style="display: none;">
-        <div class="flex items-start gap-3">
-            <div class="w-10 h-10 bg-emerald-500/15 text-emerald-500 rounded-xl flex items-center justify-center shrink-0 border border-emerald-500/20 font-black">印</div>
-            <div class="flex-1 min-w-0">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-black tracking-widest text-emerald-500">UIDAI Portal Alert</span>
-                    <button @click="toastOpen = false" class="text-slate-400 hover:text-slate-200 transition-colors cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </div>
-                <p class="text-xs font-bold text-white mt-1.5 leading-relaxed">
-                    Security OTP for Aadhaar verification is <span class="font-mono text-emerald-400 text-sm tracking-wider font-extrabold select-all" x-text="simulatedOtp"></span>.
-                </p>
-                <div class="flex items-center gap-2 mt-3">
-                    <button @click="navigator.clipboard.writeText(simulatedOtp); $el.innerText = 'Copied!'; setTimeout(() => $el.innerText = 'Copy Code', 1500)"
-                            class="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all select-none cursor-pointer">
-                        Copy Code
-                    </button>
-                    <span class="text-[9px] text-slate-500 font-medium">Valid for 5 mins</span>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 </div>
 @endsection

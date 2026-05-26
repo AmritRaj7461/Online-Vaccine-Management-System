@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AadharOtpMail;
 
 class AadharVerificationController extends Controller
 {
@@ -59,11 +61,16 @@ class AadharVerificationController extends Controller
         $mobile = $registry->registered_mobile;
         $maskedMobile = str_repeat('X', strlen($mobile) - 4) . substr($mobile, -4);
 
+        try {
+            Mail::to($user->email)->send(new AadharOtpMail((string)$otp, $user->name));
+        } catch (\Exception $e) {
+            \Log::warning('Aadhaar OTP Email not sent: ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
-            'otp'     => $otp,
             'mobile'  => $maskedMobile,
-            'message' => 'Simulated OTP sent successfully.'
+            'message' => 'Aadhaar e-KYC OTP has been sent to your registered email address.'
         ]);
     }
 
