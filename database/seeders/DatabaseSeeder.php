@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             [
                 'aadhar_number' => '123456789015',
                 'registered_name' => 'Kanak Sao',
-                'registered_mobile' => '9876500005',
+                'registered_mobile' => '9302264639',
             ],
             [
                 'aadhar_number' => '987654321098',
